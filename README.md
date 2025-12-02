@@ -19,7 +19,7 @@ More information coming.
 
 ## Current Status
 
-First prototype PCB sent for manufacturing as of Dec 2nd 2024 (couldn't wait to confirm some footprints...).
+First prototype PCB sent for manufacturing as of Dec 2nd 2025 (couldn't wait to confirm some footprints...).
 
 ## References
 
