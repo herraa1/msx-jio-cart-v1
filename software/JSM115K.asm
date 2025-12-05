@@ -14,7 +14,7 @@
 ; license like the original jsm.as
 ;
 ; Modified and commented by Albert Herranz for 115k/jiocart
-; See https://github.com/herraa1/msx-jiocart-v1
+; See https://github.com/herraa1/msx-jio-cart-v1
 ; 
 ; Uses 115200 bps serial routines by Nyyrikki
 ; See https://www.msx.org/forum/msx-talk/development/software-rs-232-115200bps-on-msx
