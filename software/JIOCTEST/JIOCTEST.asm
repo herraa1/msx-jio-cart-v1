@@ -66,11 +66,11 @@ probe_list_of_ports:
 probe_one_port:
     push    bc
     ld      c,a
-    ld      a,0xf7
+    ld      a,0x2f
     out     (c),a
     in      a,(c)
     and     0xfc
-    cp      0x44
+    cp      0xcc
     jnz     @not_this_port
     ld      a,0xdb
     out     (c),a
@@ -78,11 +78,11 @@ probe_one_port:
     and     0xfc
     cp      0x88
     jnz     @not_this_port
-    ld      a,0x2f
+    ld      a,0xf7
     out     (c),a
     in      a,(c)
     and     0xfc
-    cp      0xcc
+    cp      0x44
 @not_this_port:
     ld      a,c
     pop     bc
