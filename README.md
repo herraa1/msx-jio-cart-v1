@@ -125,7 +125,7 @@ TBC
 
 | **Model**                                                               | **msx-jio-cart v1 build1** |
 |-------------------------------------------------------------------------|----------------------------|
-| [Sony MSX HB-101P](https://www.msx.org/wiki/Sony_HB-101P)               |           test pending     |
+| [Sony MSX HB-101P](https://www.msx.org/wiki/Sony_HB-101P)               |           OK               |
 | [Sony MSX HB-501F](https://www.msx.org/wiki/Sony_HB-501F)               |           OK               |
 | [Toshiba MSX HX-10P](https://www.msx.org/wiki/Toshiba_HX-10P)           |           OK               |
 | [Philips MSX2 VG-8235](https://www.msx.org/wiki/Philips_VG-8235)        |           OK               |
