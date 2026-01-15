@@ -121,6 +121,25 @@ The msx-jio-cart is made of a 2-layer PCB with several SMD and through-hole comp
 
 TBC
 
+## Compatibility Tests
+
+| **Model**                                                               | **msx-jio-cart v1 build1** |
+|-------------------------------------------------------------------------|----------------------------|
+| [Sony MSX HB-101P](https://www.msx.org/wiki/Sony_HB-101P)               |           test pending     |
+| [Sony MSX HB-501F](https://www.msx.org/wiki/Sony_HB-501F)               |           OK               |
+| [Toshiba MSX HX-10P](https://www.msx.org/wiki/Toshiba_HX-10P)           |           OK               |
+| [Philips MSX2 VG-8235](https://www.msx.org/wiki/Philips_VG-8235)        |           OK               |
+| [Panasonic MSX2+ FS-A1WSX](https://www.msx.org/wiki/Panasonic_FS-A1WSX) |           OK               |
+| [Omega MSX2+](https://github.com/skiselev/omega)                        |           OK               |
+| [Tides Rider](https://genami.shop/products/tides-rider-hdk)             |           OK               |
+| [JFF-TMSHAT](https://github.com/herraa1/JFF-TMSHAT)                     |           OK               |
+
+## Errata / Issues
+
+* On some MSX systems, by design or due to the aging of some components, the voltage supplied to the cartridge slots is suboptimal and the bluetooth module of a msx-jio-cart with both USB and bluetooth modules installed may be slower or even randomly disconnect. The cause is likely the additional voltage drop within the cartridge due to the reverse current protection diode that protects the MSX from being back-powered from the USB serial module.
+
+  A workaround for this problem affecting only the bluetooth module is to connect the msx-jio-cart USB port to a 5V USB power supply or data port of a computer, as the USB connector of the USB serial module can back-power the bluetooth module (but never the MSX). By doing this, the bluetooth module and USB serial module are powered directly by 5V from the USB connection.
+
 ## References
 
 NYYRIKKI's 115200 bps routines
