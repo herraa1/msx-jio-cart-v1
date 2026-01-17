@@ -123,16 +123,17 @@ TBC
 
 ## Compatibility Tests
 
-| **Model**                                                               | **msx-jio-cart v1 build1** |
-|-------------------------------------------------------------------------|----------------------------|
-| [Sony MSX HB-101P](https://www.msx.org/wiki/Sony_HB-101P)               |           OK               |
-| [Sony MSX HB-501F](https://www.msx.org/wiki/Sony_HB-501F)               |           OK               |
-| [Toshiba MSX HX-10P](https://www.msx.org/wiki/Toshiba_HX-10P)           |           OK               |
-| [Philips MSX2 VG-8235](https://www.msx.org/wiki/Philips_VG-8235)        |           OK               |
-| [Panasonic MSX2+ FS-A1WSX](https://www.msx.org/wiki/Panasonic_FS-A1WSX) |           OK               |
-| [Omega MSX2+](https://github.com/skiselev/omega)                        |           OK               |
-| [Tides Rider](https://genami.shop/products/tides-rider-hdk)             |           OK               |
-| [JFF-TMSHAT](https://github.com/herraa1/JFF-TMSHAT)                     |           OK               |
+| **Model**                                                                          | **msx-jio-cart v1 build1** |
+|------------------------------------------------------------------------------------|----------------------------|
+| [Sony MSX HB-101P](https://www.msx.org/wiki/Sony_HB-101P)                          |           OK               |
+| [Sony MSX HB-501F](https://www.msx.org/wiki/Sony_HB-501F)                          |           OK               |
+| [Toshiba MSX HX-10P](https://www.msx.org/wiki/Toshiba_HX-10P)                      |           OK               |
+| [Philips MSX2 VG-8235](https://www.msx.org/wiki/Philips_VG-8235)                   |           OK               |
+| [Panasonic MSX2+ FS-A1WSX](https://www.msx.org/wiki/Panasonic_FS-A1WSX)            |           OK               |
+| [Omega MSX2+](https://github.com/skiselev/omega)                                   |           OK               |
+| [Tides Rider](https://genami.shop/products/tides-rider-hdk)                        |           OK               |
+| [JFF-TMSHAT](https://github.com/herraa1/JFF-TMSHAT)                                |           OK               |
+| [uMSX](https://theretrohacker.com/2022/07/08/yet-another-fpga-based-msx-the-umsx/) |           OK               |
 
 ## Errata / Issues
 
