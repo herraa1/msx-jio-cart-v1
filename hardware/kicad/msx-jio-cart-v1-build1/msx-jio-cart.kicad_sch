@@ -8520,7 +8520,7 @@
 		)
 		(uuid "2c087d8a-deb7-4050-b67c-35129b386304")
 	)
-	(text "JP1 selects which reset signal\nis used for the 74HCT173:\n- 3-2: LOW, no reset ever\n- 2-1: NOT ~{RESET}, trigger a reset on MSX reset\n\nThe first option may cause the BT module to boot\nin AT mode on power on when SW3 connects CTS to F2.\nSo in this mode SW3 must be selected to\ndisconnect CTS from F2.\n\nThe second option causes the BT module to always\nboot in data mode on power on when SW3 connects\nCTS to F2, but requires C5 and U5 populated.\nSwitching to \"mini\" AT mode can be achieved with\nSW3 connecting CTS to F2 and setting CTS high\nby software from the MSX side (out &h30,&h0c).\n\nIf SW3 disconnects CTS from F2 then the BT module\nwill always boot in data mode, irrespective of\nthe JP1 setting.\n"
+	(text "JP1 selects which reset signal\nis used for the 74HCT173:\n- 3-2: LOW, no reset ever\n- 2-1: NOT ~{RESET}, trigger a reset on MSX reset\n\nThe first option may cause the BT module to boot\nin AT mode on power on when SW3 connects BT_EN_5V to F2.\nSo in this mode SW3 must be selected to\ndisconnect BT_EN_5V from F2.\n\nThe second option causes the BT module to always\nboot in data mode on poweron when SW3 connects\nBT_EN_5V to F2, but requires C5 and U5 populated.\nSwitching to \"mini\" AT mode can be achieved with\nSW3 connecting BT_EN_5V to F2 and setting BT_EN_5V high\nby software from the MSX side (out &h30,&h0c).\n\nIf SW3 disconnects BT_EN_5V from F2 then the BT module\nwill always boot in data mode, irrespective of\nthe JP1 setting.\n"
 		(exclude_from_sim no)
 		(at 310.388 219.202 0)
 		(effects
