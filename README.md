@@ -58,25 +58,25 @@ The msx-jio-cart is made of a 2-layer PCB with several SMD and through-hole comp
 
 :white_check_mark: This board has been successfully built and tested.
 
-[<img src="images/msx-jiocart-v1-front-render.png" width="512"/>](images/msx-jiocart-v1-front-render.png)
+[<img src="images/msx-jiocart-v1-front-render_512x.png" width="512"/>](images/msx-jiocart-v1-front-render.png)
 
-[<img src="images/msx-jiocart-v1-back-render.png" width="512"/>](images/msx-jiocart-v1-back-render.png)
+[<img src="images/msx-jiocart-v1-back-render_512x.png" width="512"/>](images/msx-jiocart-v1-back-render.png)
 
 [Bill Of Materials (BoM)](https://html-preview.github.io/?url=https://raw.githubusercontent.com/herraa1/msx-jio-cart-v1/main/hardware/kicad/msx-jio-cart-v1-build1/bom/ibom.html)
 
 [Schematic and PCB](https://kicanvas.org/?github=https%3A%2F%2Fgithub.com%2Fherraa1%2Fmsx-jio-cart-v1%2Ftree%2Fmain%2Fhardware%2Fkicad%2Fmsx-jio-cart-v1-build1)
 
-|[<img src="images/msx-jiocart-v1-front-unpopulated-8742.png" width="256"/>](images/msx-jiocart-v1-front-unpopulated-8742.png)|[<img src="images/msx-jiocart-v1-back-unpopulated-8743.png" width="256"/>](images/msx-jiocart-v1-back-unpopulated-8743.png)|
+|[<img src="images/msx-jiocart-v1-front-unpopulated-8742_256x.png" width="256"/>](images/msx-jiocart-v1-front-unpopulated-8742.png)|[<img src="images/msx-jiocart-v1-back-unpopulated-8743_256x.png" width="256"/>](images/msx-jiocart-v1-back-unpopulated-8743.png)|
 |-|-|
 |msx-jio-cart-v1 build1<br>PCB unpopulated front|msx-jio-cart-v1 build1<br>PCB unpopulated back|
 
-|[<img src="images/msx-jiocart-v1-front-populated-serial-and-bluetooth-8744.png" width="512"/>](images/msx-jiocart-v1-front-populated-serial-and-bluetooth-8744.png)|
+|[<img src="images/msx-jiocart-v1-front-populated-serial-and-bluetooth-8744_512x.png" width="512"/>](images/msx-jiocart-v1-front-populated-serial-and-bluetooth-8744.png)|
 |:--|
 |msx-jio-cart-v1 build1 PCB populated front|
 
 #### LED indicators
 
-[<img src="images/msx-jiocart-v1-build1-leds.png" width="512"/>](images/msx-jiocart-v1-build1-leds.png)
+[<img src="images/msx-jiocart-v1-build1-leds_512x.png" width="512"/>](images/msx-jiocart-v1-build1-leds.png)
 
 | **LED**   | **State**      | **Indication** |
 |-----------|----------------|----------------|
@@ -85,19 +85,30 @@ The msx-jio-cart is made of a 2-layer PCB with several SMD and through-hole comp
 
 #### Switches and Jumpers
 
-| **Switch** | **Label**        | **State**          | **Purpose** |
+[<img src="images/msx-jiocart-v1-build1-switches-and-jumpers_512x.png" width="512"/>](images/msx-jiocart-v1-build1-switches-and-jumpers.png)
+
+| **Switch/Jumper** | **Label**        | **State**          | **Purpose** |
+|-------------------|------------------|--------------------|----------------|
+| _SW1_             | ROMDIS           | **Enable**\*       | Enable Flash ROM for normal operation                                           |
+| _SW1_             | ROMDIS           | Disable            | Disable Flash ROM (only for in-system programming)                              |
+| _SW2_             | IOSEL            | 1,2,3 Off          | Disable I/O register (JIO CART unavailable)                                     |
+| _SW2_             | IOSEL            | **1 On 2,3 Off**\* | Configure I/O register at 00h..07h                                              |
+| _SW2_             | IOSEL            | 2 On 1,3 Off       | Configure I/O register at 20h..27h                                              |
+| _SW2_             | IOSEL            | 3 On 1,2 Off       | Configure I/O register at 30h..37h                                              |
+| _SW3_             | BLUETOOTH/SERIAL | **Left**\*         | Enable Bluetooth, leave EN floating (data mode) when JP4 1-2                    |
+| _SW3_             | BLUETOOTH/SERIAL | Middle             | Enable Bluetooth, control EN from I/O register when JP4 1-2                     |
+| _SW3_             | BLUETOOTH/SERIAL | **Right**\*        | Enable USB                                                                      |
+| _JP4_             | BTENCTL          | **1-2**\*          | Control EN according to SW3 position                                            |
+| _JP4_             | BTENCTL          | 2-3                | Set EN high unconditionally (AT mode)                                           |
+
+\* Default settings
+
+#### Advanced jumpers
+
+[<img src="images/msx-jiocart-v1-build1-advanced-jumpers_512x.png" width="512"/>](images/msx-jiocart-v1-build1-advanced-jumpers.png)
+
+| **Jumper** | **Label**        | **State**          | **Purpose** |
 |------------|------------------|--------------------|----------------|
-| _SW1_      | ROMDIS           | **Enable**\*       | Enable Flash ROM for normal operation                                           |
-| _SW1_      | ROMDIS           | Disable            | Disable Flash ROM (only for in-system programming)                              |
-| _SW2_      | IOSEL            | 1,2,3 Off          | Disable I/O register (JIO CART unavailable)                                     |
-| _SW2_      | IOSEL            | **1 On 2,3 Off**\* | Configure I/O register at 00h..07h                                              |
-| _SW2_      | IOSEL            | 2 On 1,3 Off       | Configure I/O register at 20h..27h                                              |
-| _SW2_      | IOSEL            | 3 On 1,2 Off       | Configure I/O register at 30h..37h                                              |
-| _SW3_      | BLUETOOTH/SERIAL | **Left**\*         | Enable Bluetooth, leave EN floating (data mode) when JP4 1-2                    |
-| _SW3_      | BLUETOOTH/SERIAL | Middle             | Enable Bluetooth, control EN from I/O register when JP4 1-2                     |
-| _SW3_      | BLUETOOTH/SERIAL | **Right**\*        | Enable USB                                                                      |
-| _JP4_      | BTENCTL          | **1-2**\*          | Control EN according to SW3 position                                            |
-| _JP4_      | BTENCTL          | 2-3                | Set EN high unconditionally (AT mode)                                           |
 | _JP3_      | -                | **Open**\*         | (Advanced) Populate R4 and R5, drive Bluetooth EN signal using 3V3 logic        |
 | _JP3_      | -                | Closed             | (Advanced) Do NOT populate R4 and R5, drive Bluetooth EN signal using 5V logic  |
 | _JP2_      | -                | **Open**\*         | (Advanced) Populate R2 and R3, drive Bluetooth RXD signal using 3V3 logic       |
@@ -109,13 +120,15 @@ The msx-jio-cart is made of a 2-layer PCB with several SMD and through-hole comp
 
 #### Headers
 
+[<img src="images/msx-jiocart-v1-build1-headers_512x.png" width="512"/>](images/msx-jiocart-v1-build1-headers.png)
+
 | **Header** | **Label**        | **Purpose** |
 |------------|------------------|----------------|
 | _J1_       | EXTPROG          | Allows to configure the Bluetooth module via AT commands externally |
 
 ### msx-jio-cart early prototype
 
-[<img src="images/msx-jiocart-early-prototype-board.png" width="512"/>](images/msx-jiocart-early-prototype-board.png)
+[<img src="images/msx-jiocart-early-prototype-board_512x.png" width="512"/>](images/msx-jiocart-early-prototype-board.png)
 
 ## ROM Flashing Instructions
 
