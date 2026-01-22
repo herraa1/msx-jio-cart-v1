@@ -132,7 +132,104 @@ The msx-jio-cart is made of a 2-layer PCB with several SMD and through-hole comp
 
 ## ROM Flashing Instructions
 
-TBC
+### Flashing the ROM from MSX-DOS
+
+[<img src="images/msx-jiocart-v1-flashing-with-wrtsst_512x.png" width="512"/>](images/msx-jiocart-v1-flashing-with-wrtsst.png)
+
+1. Prepare your bootable MSX-DOS media (a floppy disk, a mass storage device, etc.)
+2. Copy [WRTSST.COM](https://github.com/hra1129/MSX_MegaSCC_for_SST39SF040/blob/main/tools/wrtsst/WRTSST.COM) to your MSX-DOS media
+3. Copy the JIO client ROMs [jio_dos1.rom](https://github.com/b3rendsh/msxdos2s/blob/main/jio/client/jio_dos1.rom) for DOS 1.x and [jio_dos2.rom](https://github.com/b3rendsh/msxdos2s/blob/main/jio/client/jio_dos2.rom) for DOS 2.x to your MSX-DOS media
+4. Move the _SW1_ switch to the _disabled_ position (see [Switches and jumpers](#switches-and-jumpers))
+5. With your MSX powered off, insert your bootable MSX-DOS media and insert the msx-jio-cart into an empty slot
+6. Power on and boot your MSX with your MSX-DOS media
+7. Once on the MSX-DOS prompt, move the _SW1_ switch to the _enabled_ position (see [Switches and jumpers](#switches-and-jumpers))
+
+> [!WARNING]
+> Make sure you select the right slot before using WRTSST.COM.
+> If you select the wrong slot, or do not select a slot, and you happen to have other SST39SF* compatible Flash ROMs in your MSX system, you may end up erasing and overwriting the wrong IC.
+
+8. To flash the `jio_dos1.rom` into the _msx-jio-cart_ inserted in _slot 1_, execute the following command in the MSX-DOS prompt:
+
+  ~~~Shell
+  WRTSST /S1 JIO_DOS1.ROM
+  ~~~
+
+   Change the /Sx parameter to the actual slot number where the msx-jio-cart is inserted.
+
+8. To flash the `jio_dos2.rom` into the _msx-jio-cart_ inserted in _slot 1_, execute the following command in the MSX-DOS prompt:
+
+  ~~~Shell
+  WRTSST /S1 JIO_DOS2.ROM
+  ~~~
+
+   Change the /Sx parameter to the actual slot number where the msx-jio-cart is inserted.
+
+### Flashing the ROM using a TL866II Plus and minipro
+
+1. Install [minipro](https://gitlab.com/DavidGriffith/minipro/) into your Linux box
+2. Insert the `SST39SF010` PLLC32 Flash ROM IC into a PLCC32 to DIP32 adapter, taking into account the orientation markings
+3. Insert the PLCC32 to DIP32 adapter into the `TL866II Plus`, again taking into account the orientation markings
+4. Connect your `TL866II Plus` to a USB port of your Linux box
+5. Check that the Flash ROM IC is correctly identified.
+   It should indicate a Chip ID of `0xBFB5`.
+
+  ~~~bash
+  ./minipro -p SST39SF010@PLCC32 -D
+  ~~~
+  ~~~
+  Found TL866II+ 04.2.132 (0x284)
+  Device code: 02114104
+  Serial code: DVJZVC8IFBXAEQ55JFIU
+  USB speed: 12Mbps (USB 1.1)
+  Chip ID: 0xBFB5  OK
+  ~~~
+
+6. Build a 128K file named `128kdos1.bin` with the `jio_dos1.rom` contents at the correct offset executing the following command:
+
+  ~~~bash
+  cat <(dd if=/dev/zero ibs=16k count=1 | LC_ALL=C tr "\000" "\377") jio_dos1.rom <(dd if=/dev/zero ibs=96k count=1 | LC_ALL=C tr "\000" "\377") > 128kdos1.bin
+  ~~~
+
+7. Build a 128K file named `128kdos2.bin` with the `jio_dos2.rom` contents at the correct offset executing the following command:
+
+  ~~~bash
+  cat <(dd if=/dev/zero ibs=16k count=1 | LC_ALL=C tr "\000" "\377") jio_dos2.rom <(dd if=/dev/zero ibs=80k count=1 | LC_ALL=C tr "\000" "\377") > 128kdos2.bin
+  ~~~
+
+8. To flash the `128kdos1.bin` for DOS 1.x into the Flash ROM, execute the following command:
+
+  ~~~bash
+  ./minipro -p SST39SF010@PLCC32 -w 128kdos1.bin
+  ~~~
+  ~~~
+  Found TL866II+ 04.2.132 (0x284)
+  Device code: 02114104
+  Serial code: DVJZVC8IFBXAEQ55JFIU
+  USB speed: 12Mbps (USB 1.1)
+  Chip ID: 0xBFB5  OK
+  Erasing... 0.40Sec OK
+  Writing Code...  6.40Sec  OK
+  Reading Code...  0.98Sec  OK
+  Verification OK
+  ~~~
+
+9. To flash the `128kdos2.bin` for DOS 2.x into the Flash ROM, execute the following command:
+
+  ~~~bash
+  ./minipro -p SST39SF010@PLCC32 -w 128kdos2.bin
+  ~~~
+  ~~~
+  Found TL866II+ 04.2.132 (0x284)
+  Device code: 02114104
+  Serial code: DVJZVC8IFBXAEQ55JFIU
+  USB speed: 12Mbps (USB 1.1)
+  Chip ID: 0xBFB5  OK
+  Erasing... 0.40Sec OK
+  Writing Code...  6.40Sec  OK
+  Reading Code...  0.98Sec  OK
+  Verification OK
+  ~~~
+
 
 ## Compatibility Tests
 
@@ -148,7 +245,7 @@ TBC
 | [JFF-TMSHAT](https://github.com/herraa1/JFF-TMSHAT)                                |           OK               |
 | [uMSX](https://theretrohacker.com/2022/07/08/yet-another-fpga-based-msx-the-umsx/) |           OK               |
 
-## Errata / Issues
+## Errata / Known Issues
 
 * On some MSX systems, by design or due to the aging of some components, the voltage supplied to the cartridge slots is suboptimal and the bluetooth module of a msx-jio-cart with both USB and bluetooth modules installed may be slower or even randomly disconnect. The cause is likely the additional voltage drop within the cartridge due to the reverse current protection diode that protects the MSX from being back-powered from the USB serial module.
 
