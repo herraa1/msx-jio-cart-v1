@@ -240,7 +240,7 @@ The msx-jio-cart is made of a 2-layer PCB with several SMD and through-hole comp
 
 #### Selecting Bluetooth AT configuration mode at 38400 bauds
 
-To enable Bluetooth AT configuration mode at 38400 bauds, move the _SW1_ `ROMDIS` slider to the `right` (disable) position, move the _SW3_ `BLUETOOTH/SERIAL` slider to the `left` (Bluetooth) position and set the _JP4_ `BTENCTL` jumper to the `2-3` position.
+To enable Bluetooth AT configuration mode at 38400 bauds, move the _SW1_ `ROMDIS` handle to the `right` (disable) position, move the _SW3_ `BLUETOOTH/SERIAL` handle to the `left` (Bluetooth) position and set the _JP4_ `BTENCTL` jumper to the `2-3` position.
 
 This mode can be used to re-configure the bluetooth module using AT commands with a 38400 fixed baud rate irrespective of the configured baud rate at the module. If not already done, use the `JSM` tool in this mode to assign a name to the Bluetooth module and to set the baud rate to 115200.
 
@@ -279,7 +279,7 @@ See the [Switches and jumpers](#switches-and-jumpers) section to determine which
 
 ### Selecting USB Serial Mode
 
-To enable USB Serial mode, move the _SW1_ `ROMDIS` slider to the `left` (enable) position and move the _SW3_ `BLUETOOTH/SERIAL` slider to the `right` (USB Serial) position.
+To enable USB Serial mode, move the _SW1_ `ROMDIS` handle to the `left` (enable) position and move the _SW3_ `BLUETOOTH/SERIAL` handle to the `right` (USB Serial) position.
 
 | **Switch/Jumper** | **Label**          | **State**          | **Purpose**    |
 |-------------------|--------------------|--------------------|----------------|
@@ -297,7 +297,7 @@ In USB Serial mode, the USB module RX and TX LEDs blink at the same time as the 
 
 ### Selecting Bluetooth normal mode
 
-To enable Bluetooth normal mode, move the _SW1_ `ROMDIS` slider to the `right` (disable) position, move the _SW3_ `BLUETOOTH/SERIAL` slider to the `left` (Bluetooth) position and set the _JP4_ `BTENCTL` jumper to the `1-2` position.
+To enable Bluetooth normal mode, move the _SW1_ `ROMDIS` handle to the `right` (disable) position, move the _SW3_ `BLUETOOTH/SERIAL` handle to the `left` (Bluetooth) position and set the _JP4_ `BTENCTL` jumper to the `1-2` position.
 
 This mode should only be used once the Bluetooth module has been configured at 115200 bauds.
 
