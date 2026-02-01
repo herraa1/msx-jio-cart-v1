@@ -12,14 +12,21 @@ It includes:
 * a switch to select the active serial module
   * optional if only one module is populated
 
+What can I do with a msx-jio-cart?
+
+* serve a hard or floppy disk-image from a host computer (or smartphone) to your MSX, through high-speed 115200 bauds communication (either USB or Bluetooth)
+* more things to come
+
 > [!NOTE]
 > Documentation in progress
+
 
 ## Current Status
 
 * First prototype PCB sent for manufacturing as of Dec 2nd 2025 (couldn't wait to confirm some footprints...).
 * After a long wait, bare prototype PCBs arrived as of Jan 8th 2026. Now, let's find some time to assemble them and (cross fingers) hope I grabbed all needed components.
-* First prototype successfully assembled and tested as of Jan 11th 2026.
+* First build1 prototype successfully assembled and tested as of Jan 11th 2026.
+* Another build1 cartridge successfully assembled and tested as of Jan 30th 2026.
 
 ## [Firmware](https://github.com/b3rendsh/msxdos2s/tree/main/jio/client)
 
@@ -33,7 +40,7 @@ See [ROM Flashing Instructions](#rom-flashing-instructions).
 
 The msx-jio-cart requires one of @louthrax [JIO Servers](https://github.com/louthrax/MSXJIO/releases).
 
-On the JIO server, choose the connection method (Serial or Bluetooth) that matches your current msx-jio-cart serial module selection, according to switch _SW3_ BLUETOOTH/SERIAL.
+On the JIO server, choose the connection method (Serial or Bluetooth) that matches your current msx-jio-cart serial module selection, according to switch `_SW3_ BLUETOOTH/SERIAL`.
 
 ## [Hardware](hardware/kicad/)
 
@@ -87,19 +94,19 @@ The msx-jio-cart is made of a 2-layer PCB with several SMD and through-hole comp
 
 [<img src="images/msx-jiocart-v1-build1-switches-and-jumpers_512x.png" width="512"/>](images/msx-jiocart-v1-build1-switches-and-jumpers.png)
 
-| **Switch/Jumper** | **Label**        | **State**          | **Purpose** |
-|-------------------|------------------|--------------------|----------------|
-| _SW1_             | ROMDIS           | **Enable**\*       | Enable Flash ROM for normal operation                                           |
-| _SW1_             | ROMDIS           | Disable            | Disable Flash ROM (only for in-system programming)                              |
-| _SW2_             | IOSEL            | 1,2,3 Off          | Disable I/O register (JIO CART unavailable)                                     |
-| _SW2_             | IOSEL            | **1 On 2,3 Off**\* | Configure I/O register at 00h..07h                                              |
-| _SW2_             | IOSEL            | 2 On 1,3 Off       | Configure I/O register at 20h..27h                                              |
-| _SW2_             | IOSEL            | 3 On 1,2 Off       | Configure I/O register at 30h..37h                                              |
-| _SW3_             | BLUETOOTH/SERIAL | **Left**\*         | Enable Bluetooth, leave EN floating (data mode) when JP4 1-2                    |
-| _SW3_             | BLUETOOTH/SERIAL | Middle             | Enable Bluetooth, control EN from I/O register when JP4 1-2                     |
-| _SW3_             | BLUETOOTH/SERIAL | **Right**\*        | Enable USB                                                                      |
-| _JP4_             | BTENCTL          | **1-2**\*          | Control EN according to SW3 position                                            |
-| _JP4_             | BTENCTL          | 2-3                | Set EN high unconditionally (AT mode)                                           |
+| **Switch/Jumper** | **Label**          | **State**          | **Purpose**    |
+|-------------------|--------------------|--------------------|----------------|
+| _SW1_             | `ROMDIS`           | **Enable**\*       | Enable Flash ROM for normal operation                                           |
+| _SW1_             | `ROMDIS`           | Disable            | Disable Flash ROM (only for in-system programming)                              |
+| _SW2_             | `IOSEL`            | 1,2,3 Off          | Disable I/O register (JIO CART unavailable)                                     |
+| _SW2_             | `IOSEL`            | **1 On 2,3 Off**\* | Configure I/O register at 00h..07h                                              |
+| _SW2_             | `IOSEL`            | 2 On 1,3 Off       | Configure I/O register at 20h..27h                                              |
+| _SW2_             | `IOSEL`            | 3 On 1,2 Off       | Configure I/O register at 30h..37h                                              |
+| _SW3_             | `BLUETOOTH/SERIAL` | **Left**\*         | Enable Bluetooth, leave EN floating (data mode) when JP4 1-2                    |
+| _SW3_             | `BLUETOOTH/SERIAL` | Middle             | Enable Bluetooth, control EN from I/O register when JP4 1-2                     |
+| _SW3_             | `BLUETOOTH/SERIAL` | **Right**\*        | Enable USB                                                                      |
+| _JP4_             | `BTENCTL`          | **1-2**\*          | Control EN according to SW3 position                                            |
+| _JP4_             | `BTENCTL`          | 2-3                | Set EN high unconditionally (AT mode)                                           |
 
 \* Default settings
 
@@ -107,7 +114,7 @@ The msx-jio-cart is made of a 2-layer PCB with several SMD and through-hole comp
 
 [<img src="images/msx-jiocart-v1-build1-advanced-jumpers_512x.png" width="512"/>](images/msx-jiocart-v1-build1-advanced-jumpers.png)
 
-| **Jumper** | **Label**        | **State**          | **Purpose** |
+| **Jumper** | **Label**        | **State**          | **Purpose**    |
 |------------|------------------|--------------------|----------------|
 | _JP3_      | -                | **Open**\*         | (Advanced) Populate R4 and R5, drive Bluetooth EN signal using 3V3 logic        |
 | _JP3_      | -                | Closed             | (Advanced) Do NOT populate R4 and R5, drive Bluetooth EN signal using 5V logic  |
@@ -122,31 +129,30 @@ The msx-jio-cart is made of a 2-layer PCB with several SMD and through-hole comp
 
 [<img src="images/msx-jiocart-v1-build1-headers_512x.png" width="512"/>](images/msx-jiocart-v1-build1-headers.png)
 
-| **Header** | **Label**        | **Purpose** |
+| **Header** | **Label**        | **Purpose**    |
 |------------|------------------|----------------|
-| _J1_       | EXTPROG          | Allows to configure the Bluetooth module via AT commands externally |
+| _J1_       | `EXTPROG`        | Allows to configure the Bluetooth module via AT commands externally |
 
-### msx-jio-cart early prototype
 
-[<img src="images/msx-jiocart-early-prototype-board_512x.png" width="512"/>](images/msx-jiocart-early-prototype-board.png)
+## Cartridge Setup
 
-## ROM Flashing Instructions
+### ROM Flashing Instructions
 
-### Flashing the ROM from MSX-DOS
+#### Flashing the ROM from MSX-DOS
 
 [<img src="images/msx-jiocart-v1-flashing-with-wrtsst_512x.png" width="512"/>](images/msx-jiocart-v1-flashing-with-wrtsst.png)
 
 1. Prepare your bootable MSX-DOS media (a floppy disk, a mass storage device, etc.)
 2. Copy [WRTSST.COM](https://github.com/hra1129/MSX_MegaSCC_for_SST39SF040/blob/main/tools/wrtsst/WRTSST.COM) to your MSX-DOS media
 3. Copy the JIO client ROMs [jio_dos1.rom](https://github.com/b3rendsh/msxdos2s/blob/main/jio/client/jio_dos1.rom) for DOS 1.x and [jio_dos2.rom](https://github.com/b3rendsh/msxdos2s/blob/main/jio/client/jio_dos2.rom) for DOS 2.x to your MSX-DOS media
-4. Move the _SW1_ switch to the _disabled_ position (see [Switches and jumpers](#switches-and-jumpers))
+4. Move the _SW1_ `ROMDIS` switch to the _disabled_ position (see [Switches and jumpers](#switches-and-jumpers))
 5. With your MSX powered off, insert your bootable MSX-DOS media and insert the msx-jio-cart into an empty slot
 6. Power on and boot your MSX with your MSX-DOS media
-7. Once on the MSX-DOS prompt, move the _SW1_ switch to the _enabled_ position (see [Switches and jumpers](#switches-and-jumpers))
+7. Once on the MSX-DOS prompt, move the _SW1_ `ROMDIS` switch to the _enabled_ position (see [Switches and jumpers](#switches-and-jumpers))
 
 > [!WARNING]
-> Make sure you select the right slot before using WRTSST.COM.
-> If you select the wrong slot, or do not select a slot, and you happen to have other SST39SF* compatible Flash ROMs in your MSX system, you may end up erasing and overwriting the wrong IC.
+> Make sure you select the right slot before using `WRTSST.COM`.
+> If you select the wrong slot, or do not select a slot, and you happen to have other `SST39SF*` compatible Flash ROMs in your MSX system, you may end up erasing and overwriting the wrong IC.
 
 8. To flash the `jio_dos1.rom` into the _msx-jio-cart_ inserted in _slot 1_, execute the following command in the MSX-DOS prompt:
 
@@ -164,7 +170,7 @@ The msx-jio-cart is made of a 2-layer PCB with several SMD and through-hole comp
 
    Change the /Sx parameter to the actual slot number where the msx-jio-cart is inserted.
 
-### Flashing the ROM using a TL866II Plus and minipro
+#### Flashing the ROM using a TL866II Plus and minipro
 
 1. Install [minipro](https://gitlab.com/DavidGriffith/minipro/) into your Linux box
 2. Insert the `SST39SF010` PLLC32 Flash ROM IC into a PLCC32 to DIP32 adapter, taking into account the orientation markings
@@ -230,6 +236,93 @@ The msx-jio-cart is made of a 2-layer PCB with several SMD and through-hole comp
   Verification OK
   ~~~
 
+### Bluetooth Configuration Instructions
+
+#### Selecting Bluetooth AT configuration mode at 38400 bauds
+
+To enable Bluetooth AT configuration mode at 38400 bauds, move the _SW1_ `ROMDIS` slider to the `right` (disable) position, move the _SW3_ `BLUETOOTH/SERIAL` slider to the `left` (Bluetooth) position and set the _JP4_ `BTENCTL` jumper to the `2-3` position.
+
+This mode can be used to re-configure the bluetooth module using AT commands with a 38400 fixed baud rate irrespective of the configured baud rate at the module. If not already done, use the `JSM` tool in this mode to assign a name to the Bluetooth module and to set the baud rate to 115200.
+
+| **Switch/Jumper** | **Label**          | **State**          | **Purpose**    |
+|-------------------|--------------------|--------------------|----------------|
+| _SW1_             | `ROMDIS`           | Disable            | Disable Flash ROM (only for in-system programming or HC-05 re-configuration)    |
+| _SW3_             | `BLUETOOTH/SERIAL` | **Left**\*         | Enable Bluetooth, leave EN floating (data mode) when JP4 1-2                    |
+| _JP4_             | `BTENCTL`          | 2-3                | Set EN high unconditionally (AT mode)                                           |
+
+[<img src="images/msx-jiocart-ATmode.png" width="512"/>](images/msx-jiocart-ATmode.png)
+
+##### Identifying AT mode 38400 baud state
+
+In Bluetooth AT configuration mode at 38400 bauds, the module LED goes on for 2 seconds approximately and then goes off for 1 second, repeating this pattern continuously.
+
+[<img src="images/msx-jiocart-bluetooth-led-blinking-atmode.gif"/>](images/msx-jiocart-bluetooth-led-blinking-atmode.gif)
+
+#### Using the JSM tool to configure the Bluetooth module
+
+TBD
+
+
+## Cartridge Operation
+
+### Setting the cartridge I/O address
+
+With the cartridge removed from the MSX and without power applied, slide only one of the three switches in the _SW2_ `IOSEL` DIP switch to the `ON` position to select one of the possible I/O address ranges.
+
+See the [Switches and jumpers](#switches-and-jumpers) section to determine which I/O address range is enabled by each switch.
+
+> [!NOTE]
+> Depending on which orientation was used when the DIP switch was soldered, the numbering and the `ON` position side may be different. Always use the numbering of the cartridge silkscreen to identify the `1`, `2` and `3` switches (not the numbering of the DIP switch) and always use the DIP switch `ON` position marking to determine the ON position.
+
+> [!TIP]
+> The JIO function of the MSX JIO cartridge can be disabled by setting all of the `1`, `2` and `3` switches to the `OFF` position. 
+
+### Selecting USB Serial Mode
+
+To enable USB Serial mode, move the _SW1_ `ROMDIS` slider to the `left` (enable) position and move the _SW3_ `BLUETOOTH/SERIAL` slider to the `right` (USB Serial) position.
+
+| **Switch/Jumper** | **Label**          | **State**          | **Purpose**    |
+|-------------------|--------------------|--------------------|----------------|
+| _SW1_             | `ROMDIS`           | **Enable**\*       | Enable Flash ROM for normal operation                                           |
+| _SW3_             | `BLUETOOTH/SERIAL` | **Right**\*        | Enable USB                                                                      |
+
+[<img src="images/msx-jiocart-usb-mode.png" width="512"/>](images/msx-jiocart-usb-mode.png)
+
+#### Identifying USB Serial Mode
+
+In USB Serial mode, the USB module RX and TX LEDs blink at the same time as the cartridge RX and TX LEDs.
+
+[<img src="images/msx-jiocart-usb-led-blinking.gif"/>](images/msx-jiocart-usb-led-blinking.gif)
+
+
+### Selecting Bluetooth normal mode
+
+To enable Bluetooth normal mode, move the _SW1_ `ROMDIS` slider to the `right` (disable) position, move the _SW3_ `BLUETOOTH/SERIAL` slider to the `left` (Bluetooth) position and set the _JP4_ `BTENCTL` jumper to the `1-2` position.
+
+This mode should only be used once the Bluetooth module has been configured at 115200 bauds.
+
+| **Switch/Jumper** | **Label**          | **State**          | **Purpose**    |
+|-------------------|--------------------|--------------------|----------------|
+| _SW1_             | `ROMDIS`           | **Enable**\*       | Enable Flash ROM for normal operation                                           |
+| _SW3_             | `BLUETOOTH/SERIAL` | **Left**\*/Middle  | Enable Bluetooth                                                                |
+| _JP4_             | `BTENCTL`          | **1-2**\*          | Control EN according to SW3 position                                            |
+
+[<img src="images/msx-jiocart-bluetooth-mode.png" width="512"/>](images/msx-jiocart-bluetooth-mode.png)
+
+#### Identifying normal mode
+
+##### Non-paired/Unconnected state
+
+In this mode, the bluetooth module is waiting for another unpaired device to pair, or from a previously paired device to connect. The LED blinks 5 times per second approximately.
+
+[<img src="images/msx-jiocart-bluetooth-led-blinking-unpaired.gif"/>](images/msx-jiocart-bluetooth-led-blinking-unpaired.gif)
+
+##### Connected state
+
+In this mode, the bluetooth module is connected to a paired device. The LED blinks twice in a second, then goes off for two seconds, repeating this pattern continuously.
+
+[<img src="images/msx-jiocart-bluetooth-led-blinking-paired.gif"/>](images/msx-jiocart-bluetooth-led-blinking-paired.gif)
+
 
 ## Compatibility Tests
 
@@ -245,11 +338,18 @@ The msx-jio-cart is made of a 2-layer PCB with several SMD and through-hole comp
 | [JFF-TMSHAT](https://github.com/herraa1/JFF-TMSHAT)                                |           OK               |
 | [uMSX](https://theretrohacker.com/2022/07/08/yet-another-fpga-based-msx-the-umsx/) |           OK               |
 
+
 ## Errata / Known Issues
 
 * On some MSX systems, by design or due to the aging of some components, the voltage supplied to the cartridge slots is suboptimal and the bluetooth module of a msx-jio-cart with both USB and bluetooth modules installed may be slower or even randomly disconnect. The cause is likely the additional voltage drop within the cartridge due to the reverse current protection diode that protects the MSX from being back-powered from the USB serial module.
 
   A workaround for this problem affecting only the bluetooth module is to connect the msx-jio-cart USB port to a 5V USB power supply or data port of a computer, as the USB connector of the USB serial module can back-power the bluetooth module (but never the MSX). By doing this, the bluetooth module and USB serial module are powered directly by 5V from the USB connection.
+
+
+## msx-jio-cart early prototype
+
+[<img src="images/msx-jiocart-early-prototype-board_512x.png" width="512"/>](images/msx-jiocart-early-prototype-board.png)
+
 
 ## References
 
