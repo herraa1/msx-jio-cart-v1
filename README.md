@@ -297,7 +297,7 @@ In USB Serial mode, the USB module RX and TX LEDs blink at the same time as the 
 
 ### Selecting Bluetooth normal mode
 
-To enable Bluetooth normal mode, move the _SW1_ `ROMDIS` handle to the `right` (disable) position, move the _SW3_ `BLUETOOTH/SERIAL` handle to the `left` (Bluetooth) position and set the _JP4_ `BTENCTL` jumper to the `1-2` position.
+To enable Bluetooth normal mode, move the _SW1_ `ROMDIS` handle to the `left` (enable) position, move the _SW3_ `BLUETOOTH/SERIAL` handle to the `left` (Bluetooth) position and set the _JP4_ `BTENCTL` jumper to the `1-2` position.
 
 This mode should only be used once the Bluetooth module has been configured at 115200 bauds.
 
