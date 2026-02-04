@@ -4,7 +4,7 @@ This is a simple MSX cartridge that allows software-based serial communications 
 
 It includes:
 * a flash ROM writable by either software (in-system from MSX-DOS) or hardware (using an external programmer)
-* an I/O register to interface with embedded serial modules
+* an I/O register to interface with the embedded serial modules
   * address of I/O register is configurable between a set of predefined options
 * one or two of these serial modules (only one active at a time):
   * a RT232RL-based USB Serial Module
@@ -17,9 +17,6 @@ What can I do with a msx-jio-cart?
 * serve a hard or floppy disk-image from a host computer (or smartphone) to your MSX, through high-speed 115200 bauds communication (either USB or Bluetooth)
 * more things to come
 
-> [!NOTE]
-> Documentation in progress
-
 
 ## Current Status
 
@@ -28,19 +25,35 @@ What can I do with a msx-jio-cart?
 * First build1 prototype successfully assembled and tested as of Jan 11th 2026.
 * Another build1 cartridge successfully assembled and tested as of Jan 30th 2026.
 
+> [!NOTE]
+> Documentation in progress
+
+
 ## [Firmware](https://github.com/b3rendsh/msxdos2s/tree/main/jio/client)
 
 The msx-jio-cart uses @b3rendsh [JIO clients](https://github.com/b3rendsh/msxdos2s/tree/main/jio/client) in ROM format.
+
+There are two different ROMs available:
+* MSX-DOS1 ROM [jio_dos1.rom](https://github.com/b3rendsh/msxdos2s/blob/main/jio/client/jio_dos1.rom)
+  * enhanced MSX-DOS 1
+  * best suited for MSX1 machines with 64K of memory
+* MSX-DOS2 ROM [jio_dos2.rom](https://github.com/b3rendsh/msxdos2s/blob/main/jio/client/jio_dos2.rom)
+  * enhanced MSX-DOS 2.2 / 2.31
+  * works on MSX1 or higher but requires at least 128K or more RAM mapper
 
 You can flash the ROM in-system using [HRA!](https://github.com/hra1129)'s [WRTSST.COM](https://github.com/hra1129/MSX_MegaSCC_for_SST39SF040/tree/main/tools/wrtsst) from your MSX. Or you can flash the ROM using a hardware programmer like TL866II Plus and a tool like [minipro](https://gitlab.com/DavidGriffith/minipro/).
 
 See [ROM Flashing Instructions](#rom-flashing-instructions).
 
+
 ## [Software](https://github.com/louthrax/MSXJIO)
 
 The msx-jio-cart requires one of @louthrax [JIO Servers](https://github.com/louthrax/MSXJIO/releases).
 
-On the JIO server, choose the connection method (Serial or Bluetooth) that matches your current msx-jio-cart serial module selection, according to switch `_SW3_ BLUETOOTH/SERIAL`.
+The JIO Server runs on a Windows, Linux or Mac computer, or alternatively on an Android device.
+
+On the JIO server, you can select which disk image to serve and which connection method (USB Serial or Bluetooth) to use. The connection method must match your current msx-jio-cart serial module selection, according to switch _SW3_ `BLUETOOTH/SERIAL`.
+
 
 ## [Hardware](hardware/kicad/)
 
@@ -134,7 +147,12 @@ The msx-jio-cart is made of a 2-layer PCB with several SMD and through-hole comp
 | _J1_       | `EXTPROG`        | Allows to configure the Bluetooth module via AT commands externally |
 
 
-## Cartridge Setup
+## Cartridge Initial Setup
+
+Setting up the msx-jio-cart for the first time involves the following tasks:
+* flashing the onboard ROM
+* choosing an I/O address
+* and setting up the Bluetooth module (if populated)
 
 ### ROM Flashing Instructions
 
@@ -156,21 +174,21 @@ The msx-jio-cart is made of a 2-layer PCB with several SMD and through-hole comp
 
 8. To flash the `jio_dos1.rom` into the _msx-jio-cart_ inserted in _slot 1_, execute the following command in the MSX-DOS prompt:
 
-  ~~~Shell
-  WRTSST /S1 JIO_DOS1.ROM
-  ~~~
+   ~~~Shell
+   WRTSST /S1 JIO_DOS1.ROM
+   ~~~
 
    Change the /Sx parameter to the actual slot number where the msx-jio-cart is inserted.
 
 8. To flash the `jio_dos2.rom` into the _msx-jio-cart_ inserted in _slot 1_, execute the following command in the MSX-DOS prompt:
 
-  ~~~Shell
-  WRTSST /S1 JIO_DOS2.ROM
-  ~~~
+   ~~~Shell
+   WRTSST /S1 JIO_DOS2.ROM
+   ~~~
 
    Change the /Sx parameter to the actual slot number where the msx-jio-cart is inserted.
 
-#### Flashing the ROM using a TL866II Plus and minipro
+#### Flashing the ROM using a TL866II Plus and minipro from Linux
 
 1. Install [minipro](https://gitlab.com/DavidGriffith/minipro/) into your Linux box
 2. Insert the `SST39SF010` PLLC32 Flash ROM IC into a PLCC32 to DIP32 adapter, taking into account the orientation markings
@@ -179,70 +197,77 @@ The msx-jio-cart is made of a 2-layer PCB with several SMD and through-hole comp
 5. Check that the Flash ROM IC is correctly identified.
    It should indicate a Chip ID of `0xBFB5`.
 
-  ~~~bash
-  ./minipro -p SST39SF010@PLCC32 -D
-  ~~~
-  ~~~
-  Found TL866II+ 04.2.132 (0x284)
-  Device code: 02114104
-  Serial code: DVJZVC8IFBXAEQ55JFIU
-  USB speed: 12Mbps (USB 1.1)
-  Chip ID: 0xBFB5  OK
-  ~~~
+   ~~~bash
+   ./minipro -p SST39SF010@PLCC32 -D
+   ~~~
+   ~~~
+   Found TL866II+ 04.2.132 (0x284)
+   Device code: 02114104
+   Serial code: DVJZVC8IFBXAEQ55JFIU
+   USB speed: 12Mbps (USB 1.1)
+   Chip ID: 0xBFB5  OK
+   ~~~
 
 6. Build a 128K file named `128kdos1.bin` with the `jio_dos1.rom` contents at the correct offset executing the following command:
 
-  ~~~bash
-  cat <(dd if=/dev/zero ibs=16k count=1 | LC_ALL=C tr "\000" "\377") jio_dos1.rom <(dd if=/dev/zero ibs=96k count=1 | LC_ALL=C tr "\000" "\377") > 128kdos1.bin
-  ~~~
+   ~~~bash
+   cat <(dd if=/dev/zero ibs=16k count=1 | LC_ALL=C tr "\000" "\377") jio_dos1.rom <(dd if=/dev/zero ibs=96k count=1 | LC_ALL=C tr "\000" "\377") > 128kdos1.bin
+   ~~~
 
 7. Build a 128K file named `128kdos2.bin` with the `jio_dos2.rom` contents at the correct offset executing the following command:
 
-  ~~~bash
-  cat <(dd if=/dev/zero ibs=16k count=1 | LC_ALL=C tr "\000" "\377") jio_dos2.rom <(dd if=/dev/zero ibs=80k count=1 | LC_ALL=C tr "\000" "\377") > 128kdos2.bin
-  ~~~
+   ~~~bash
+   cat <(dd if=/dev/zero ibs=16k count=1 | LC_ALL=C tr "\000" "\377") jio_dos2.rom <(dd if=/dev/zero ibs=80k count=1 | LC_ALL=C tr "\000" "\377") > 128kdos2.bin
+   ~~~
 
 8. To flash the `128kdos1.bin` for DOS 1.x into the Flash ROM, execute the following command:
 
-  ~~~bash
-  ./minipro -p SST39SF010@PLCC32 -w 128kdos1.bin
-  ~~~
-  ~~~
-  Found TL866II+ 04.2.132 (0x284)
-  Device code: 02114104
-  Serial code: DVJZVC8IFBXAEQ55JFIU
-  USB speed: 12Mbps (USB 1.1)
-  Chip ID: 0xBFB5  OK
-  Erasing... 0.40Sec OK
-  Writing Code...  6.40Sec  OK
-  Reading Code...  0.98Sec  OK
-  Verification OK
-  ~~~
+   ~~~bash
+   ./minipro -p SST39SF010@PLCC32 -w 128kdos1.bin
+   ~~~
+   ~~~
+   Found TL866II+ 04.2.132 (0x284)
+   Device code: 02114104
+   Serial code: DVJZVC8IFBXAEQ55JFIU
+   USB speed: 12Mbps (USB 1.1)
+   Chip ID: 0xBFB5  OK
+   Erasing... 0.40Sec OK
+   Writing Code...  6.40Sec  OK
+   Reading Code...  0.98Sec  OK
+   Verification OK
+   ~~~
 
 9. To flash the `128kdos2.bin` for DOS 2.x into the Flash ROM, execute the following command:
 
-  ~~~bash
-  ./minipro -p SST39SF010@PLCC32 -w 128kdos2.bin
-  ~~~
-  ~~~
-  Found TL866II+ 04.2.132 (0x284)
-  Device code: 02114104
-  Serial code: DVJZVC8IFBXAEQ55JFIU
-  USB speed: 12Mbps (USB 1.1)
-  Chip ID: 0xBFB5  OK
-  Erasing... 0.40Sec OK
-  Writing Code...  6.40Sec  OK
-  Reading Code...  0.98Sec  OK
-  Verification OK
-  ~~~
+   ~~~bash
+   ./minipro -p SST39SF010@PLCC32 -w 128kdos2.bin
+   ~~~
+   ~~~
+   Found TL866II+ 04.2.132 (0x284)
+   Device code: 02114104
+   Serial code: DVJZVC8IFBXAEQ55JFIU
+   USB speed: 12Mbps (USB 1.1)
+   Chip ID: 0xBFB5  OK
+   Erasing... 0.40Sec OK
+   Writing Code...  6.40Sec  OK
+   Reading Code...  0.98Sec  OK
+   Verification OK
+   ~~~
 
-### Bluetooth Configuration Instructions
+### I/O Address Selection
+
+See [Setting the cartridge I/O address](#setting-the-cartridge-io-address).
+
+### Bluetooth Module Setup Instructions
+
+Using the JIO Server with Bluetooth requires preparing the msx-jio-cart Bluetooth module for 115200 bauds operation.
+Also, assigning a unique name to the Bluetooth module is recommended to easily locate the right msx-jio-cart.
 
 #### Selecting Bluetooth AT configuration mode at 38400 bauds
 
-To enable Bluetooth AT configuration mode at 38400 bauds, move the _SW1_ `ROMDIS` handle to the `right` (disable) position, move the _SW3_ `BLUETOOTH/SERIAL` handle to the `left` (Bluetooth) position and set the _JP4_ `BTENCTL` jumper to the `2-3` position.
+In this mode, the Bluetooth module can be configured via AT commands using a fixed 38400 baud rate, irrespective of the currently configured baud rate at the module.
 
-This mode can be used to re-configure the bluetooth module using AT commands with a 38400 fixed baud rate irrespective of the configured baud rate at the module. If not already done, use the `JSM` tool in this mode to assign a name to the Bluetooth module and to set the baud rate to 115200.
+To enable Bluetooth AT configuration mode at 38400 bauds, remove the msx-jio-cart from the MSX computer and move the _SW1_ `ROMDIS` handle to the `right` (disable) position, move the _SW3_ `BLUETOOTH/SERIAL` handle to the `left` (Bluetooth) position and set the _JP4_ `BTENCTL` jumper to the `2-3` position.
 
 | **Switch/Jumper** | **Label**          | **State**          | **Purpose**    |
 |-------------------|--------------------|--------------------|----------------|
@@ -254,14 +279,80 @@ This mode can be used to re-configure the bluetooth module using AT commands wit
 
 ##### Identifying AT mode 38400 baud state
 
-In Bluetooth AT configuration mode at 38400 bauds, the module LED goes on for 2 seconds approximately and then goes off for 1 second, repeating this pattern continuously.
+A msx-jio-cart inserted into a MSX cartridge slot, powered on and configured in Bluetooth AT configuration mode at 38400 bauds, shows the following Bluetooth module LED pattern continuously:
+* the LED goes on for 2 seconds approximately
+* and then goes off for 1 second
 
 [<img src="images/msx-jiocart-bluetooth-led-blinking-atmode.gif"/>](images/msx-jiocart-bluetooth-led-blinking-atmode.gif)
 
-#### Using the JSM tool to configure the Bluetooth module
+#### Using the JIOC38K MSX tool to configure the Bluetooth module
 
-TBD
+The JIOC38K tool can be run from a MSX computer to send AT commands at 38400 bauds to the msx-jio-cart Bluetooth module when operating in 38400 baud rate AT mode. The tool can be launched from BASIC either from tape or disk.
 
+##### Loading JIOC38K from tape
+
+1. Make sure your MSX computer is powered off
+2. Insert the msx-jio-cart cartridge configured for AT 38400 mode into a free cartridge slot of your MSX computer
+3. Connect the tape interface of your MSX computer to a computer or mobile device with an audio jack output connector and able to play WAV files
+4. Power on your MSX and proceed to the BASIC prompt
+5. Type the following instruction to load JIOC38K from tape and press `Enter`
+   ~~~bash
+   RUN¨CAS:
+   ~~~
+6. From the computer or mobile device, play the [JIOC38K.wav](software/JIOC38K.wav) file
+7. On the MSX computer, a tape record named J38K will be found, and the JIOC38K tool will load and run
+
+   [<img src="images/j38k-load-from-tape.png" width="384"/>](images/j38k-load-from-tape.png)
+
+##### Loading JIOC38K from disk (or other media)
+
+Using an auxiliar computer:
+1. Prepare your MSX-DOS media (a floppy disk, a mass storage device, etc.)
+2. Copy [JIOC38K.BAS](software/JIOC38K.BAS) and [JIOC38K.BIN](software/JIOC38K.BIN) to your MSX-DOS media
+
+Using your MSX computer:
+1. Make sure your MSX computer is powered off
+2. Insert the msx-jio-cart cartridge configured for AT 38400 mode into a free cartridge slot of your MSX computer
+3. Power on your MSX computer and make sure you are at the BASIC prompt
+4. With the MSX-DOS media inserted. type the following instruction to load JIOC38K from media and press `Enter`
+
+   ~~~bash
+   RUN"JIOC38K.BAS
+   ~~~
+
+   [<img src="images/j38k-load-from-disk.png" width="384"/>](images/j38k-load-from-disk.png)
+
+
+##### Using JIOC38K
+
+These are general guidelines when using JIOC38K:
+* The JIOC38K tool will report on startup the currently configured I/O address of the msx-jio-cart if detected.
+
+  [<img src="images/j38k-main-screen-cart-found.png" width="384"/>](images/j38k-main-screen-cart-found.png)
+
+* If no msx-jio-cart is detected, the JIOC38K tool will error out and exit to BASIC.
+
+  [<img src="images/j38k-main-screen-cart-not-found.png" width="384"/>](images/j38k-main-screen-cart-not-found.png)
+
+* AT commands can be entered freely as in BASIC mode: an AT command will only be sent once `Enter` is pressed over the line with the command.
+* If you receive an `ERROR` response, check the AT command for proper syntax and try again.
+* The very first AT command executed may fail.
+* Pressing and releasing the `CTRL` key forces cancellation of reply reception mode in case that the Bluetooth module does not provide a reply to a command.
+* Pressing `CTRL-C` exits JIOC38K and returns to the BASIC prompt.
+
+On your MSX computer:
+* Type `AT` and press `Enter` to check if you can communicate with the Bluetooth module using AT commands.
+  The Bluetooth module will reply with an `OK` prompt if everything works right. If you receive an error or a garbled reply, repeat the command until you get an `OK`reply.
+* Type `AT+NAME=yourname` and press `Enter` to name the Bluetooth module with `yourname`.
+* Type `AT+UART=115200,0,0` and press `Enter` to configure the Bluetooth module for 115200 baud operation.
+* Type `AT+NAME?` and press `Enter` to check the configured name.
+* Type `AT+UART?` and press `Enter` to check the configured baudrate.
+
+  [<img src="images/j38k-at-config.png" width="384"/>](images/j38k-at-config.png)
+
+The new configuration is automatically saved to the Bluetooth module.
+
+Once finished, power off your MSX computer and re-configure the msx-jio-cart for [Bluetooth normal operation](#selecting-bluetooth-normal-mode).
 
 ## Cartridge Operation
 
@@ -277,47 +368,50 @@ See the [Switches and jumpers](#switches-and-jumpers) section to determine which
 > [!TIP]
 > The JIO function of the MSX JIO cartridge can be disabled by setting all of the `1`, `2` and `3` switches to the `OFF` position. 
 
-### Selecting USB Serial Mode
+### Selecting normal operation modes (USB Serial and Bluetooth)
 
-To enable USB Serial mode, move the _SW1_ `ROMDIS` handle to the `left` (enable) position and move the _SW3_ `BLUETOOTH/SERIAL` handle to the `right` (USB Serial) position.
+In normal operation modes, make sure the _SW1_ `ROMDIS` handle is in the `left` (enable) position and the _JP4_ `BTENCTL` jumper is in the `1-2` position.
 
 | **Switch/Jumper** | **Label**          | **State**          | **Purpose**    |
 |-------------------|--------------------|--------------------|----------------|
 | _SW1_             | `ROMDIS`           | **Enable**\*       | Enable Flash ROM for normal operation                                           |
+| _JP4_             | `BTENCTL`          | **1-2**\*          | Control EN according to SW3 position                                            |
+
+#### USB Serial mode
+
+To enable USB Serial mode move the _SW3_ `BLUETOOTH/SERIAL` handle to the `right` (USB Serial) position.
+
+| **Switch/Jumper** | **Label**          | **State**          | **Purpose**    |
+|-------------------|--------------------|--------------------|----------------|
 | _SW3_             | `BLUETOOTH/SERIAL` | **Right**\*        | Enable USB                                                                      |
 
 [<img src="images/msx-jiocart-usb-mode.png" width="512"/>](images/msx-jiocart-usb-mode.png)
 
-#### Identifying USB Serial Mode
+##### Identifying USB Serial mode
 
 In USB Serial mode, the USB module RX and TX LEDs blink at the same time as the cartridge RX and TX LEDs.
 
 [<img src="images/msx-jiocart-usb-led-blinking.gif"/>](images/msx-jiocart-usb-led-blinking.gif)
 
+#### Bluetooth mode
 
-### Selecting Bluetooth normal mode
-
-To enable Bluetooth normal mode, move the _SW1_ `ROMDIS` handle to the `left` (enable) position, move the _SW3_ `BLUETOOTH/SERIAL` handle to the `left` (Bluetooth) position and set the _JP4_ `BTENCTL` jumper to the `1-2` position.
+To enable Bluetooth mode move the _SW3_ `BLUETOOTH/SERIAL` handle to the `left` or `middle` (Bluetooth) position.
 
 This mode should only be used once the Bluetooth module has been configured at 115200 bauds.
 
 | **Switch/Jumper** | **Label**          | **State**          | **Purpose**    |
 |-------------------|--------------------|--------------------|----------------|
-| _SW1_             | `ROMDIS`           | **Enable**\*       | Enable Flash ROM for normal operation                                           |
 | _SW3_             | `BLUETOOTH/SERIAL` | **Left**\*/Middle  | Enable Bluetooth                                                                |
-| _JP4_             | `BTENCTL`          | **1-2**\*          | Control EN according to SW3 position                                            |
 
 [<img src="images/msx-jiocart-bluetooth-mode.png" width="512"/>](images/msx-jiocart-bluetooth-mode.png)
 
-#### Identifying normal mode
-
-##### Non-paired/Unconnected state
+##### Identifying non-paired/unconnected state Bluetooth mode
 
 In this mode, the bluetooth module is waiting for another unpaired device to pair, or from a previously paired device to connect. The LED blinks 5 times per second approximately.
 
 [<img src="images/msx-jiocart-bluetooth-led-blinking-unpaired.gif"/>](images/msx-jiocart-bluetooth-led-blinking-unpaired.gif)
 
-##### Connected state
+##### Idnetifying connected state Bluetooth mode
 
 In this mode, the bluetooth module is connected to a paired device. The LED blinks twice in a second, then goes off for two seconds, repeating this pattern continuously.
 

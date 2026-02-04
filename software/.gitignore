@@ -1,0 +1,10 @@
+*.lis
+*.map
+*.o
+*.saved
+
+# Temporary files
+*.bak
+*~
+*.tmp
+

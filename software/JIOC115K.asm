@@ -1,4 +1,4 @@
-; JSM115K.asm
+; JIOC115K.asm
 ;
 ; Super-simple serial terminal suitable to re-configure the HC-05
 ; bluetooth module within a jiocart using 115200 bps in AT mode from
@@ -33,9 +33,6 @@ GETCPU: equ 0x0183
 
 MSXVER: equ 0x002D
 
-; must match IOSEL setting on the jiocart
-JIOREG: equ 0x30
-
         org 0xc800-7
 
 ; bload header
@@ -45,8 +42,33 @@ dw start, endadr, start
 start:
 
 ; print program banner
-        LD   HL, banner     ; address of program banner
+        LD   HL,msg_welcome ; address of program banner
         CALL CHPUTS         ; print null terminated program banner
+
+        call jio_detect
+        ld   a,(jio_port)
+        cp   0xff
+        jr   nz,print_jio_address
+        ld   hl,msg_jiocart_not_found
+        call CHPUTS
+        ret
+
+print_jio_address:
+        ld                              c,a
+
+        in   a,(c)
+        or   8              ; set EN high
+        out  (c),a
+
+        ld                              hl,msg_jiocart_found
+        call                            CHPUTS
+        ld                              a,c
+        call                            print_hex
+        ld                              hl,cr_lf
+        call                            CHPUTS
+
+        ld                              hl,msg_usage
+        call                            CHPUTS
 
         CALL save_cpu_mode  ; save cpu mode for later
 
@@ -67,11 +89,11 @@ find_null:
 null_found:
         ; XXX this will override other vars if more than 254 chars
         ; are read
-        LD   (HL),"\r"      ; add "\r"
+        LD   (HL),13        ; add "\r"
         INC  HL
-        LD   (HL),"\n"      ; add "\n"
+        LD   (HL),10        ; add "\n"
         INC  HL
-        LD   (HL),"\0"      ; null terminate the buffer
+        LD   (HL),0         ; null terminate the buffer
         ld   b,h            ; save end of string
         ld   c,l
         POP  HL             ; set HL to start of the buffer - 1
@@ -102,7 +124,6 @@ rx_string:
         or   a
         JR   nz,return_seen ; z is set when "\r" is seen
 
-        ; XXX this is not reached anymore
         ; check if ctrl key is pressed
         IN   A,(0xaa)       ; PPI reg C, keyb & cassette
         AND  0xf0           ; clear keyboard matrix row select register
@@ -135,19 +156,18 @@ return_seen: ; return was received
 rx_bytes:
 ;********************************************************************************************************************************
 ; IN:  HL = DATA
-;      /*BC = LENGTH*/
 ;********************************************************************************************************************************
-        ld   d,b            ; put parameters on final place
-        ld   e,c
-
-        ld   iy,"\r"        ; receive function will stop when
-                            ; this character is seen
-
         dec  hl             ; on every iteration we'll write
                             ; to (hl) and then increment hl,
                             ; compensate that for 1st iteration
 
-        ld   c,JIOREG       ; C contains the jiocart i/o register
+        ld   iy,13          ; receive function will stop when
+                            ; this character is seen
+
+        ld   e,0            ; used to control start bit polling retries (256 * 10)
+
+        ld   a,(jio_port)
+        ld   c,a            ; C contains the jiocart i/o register
 
         ld   ix,0
         add  ix,sp          ; save sp in ix, we'll use sp
@@ -169,6 +189,7 @@ rx_bytes:
         ld   a,(hl)         ; store value from (hl) into a,
                             ; we will write a to (hl) on first
                             ; iteration
+                            ; this load does not alter flags
 ;)
         jp   pe,RX_PE       ; select a execution flow according to
                             ; observed parity
@@ -178,9 +199,44 @@ RX_PO:
         ; look for start bit "0" by looping while a "1" bit is seen
         ; a "1" is detected here if i/o reg parity is odd
         ; we use the accumulator to store the read byte
+        in   f,(c)          ; 14
+        jp   pe,RX_PO_START ; 11   LOOP=25
 
         in   f,(c)          ; 14
-        jp   po,RX_PO       ; 11   LOOP=25
+        jp   pe,RX_PO_START ; 11   LOOP=25
+
+        in   f,(c)          ; 14
+        jp   pe,RX_PO_START ; 11   LOOP=25
+
+        in   f,(c)          ; 14
+        jp   pe,RX_PO_START ; 11   LOOP=25
+
+        in   f,(c)          ; 14
+        jp   pe,RX_PO_START ; 11   LOOP=25
+
+        in   f,(c)          ; 14
+        jp   pe,RX_PO_START ; 11   LOOP=25
+
+        in   f,(c)          ; 14
+        jp   pe,RX_PO_START ; 11   LOOP=25
+
+        in   f,(c)          ; 14
+        jp   pe,RX_PO_START ; 11   LOOP=25
+
+        in   f,(c)          ; 14
+        jp   pe,RX_PO_START ; 11   LOOP=25
+
+        in   f,(c)          ; 14
+        jp   pe,RX_PO_START ; 11   LOOP=25
+
+        dec  e              ;  5
+        jp   nz,RX_PO       ; 11
+
+        ; start bit not seen for a while
+        xor  a
+        jp   ReceiveNOK
+
+RX_PO_START:
         ld   (hl),a         ;  8  = 33 CYCLES
 
         in   a,(c)          ; 14   Bit 0
@@ -226,7 +282,7 @@ RX_PO:
 
         ; return if we received a '\r'
         cp   iyl            ;  5
-        jp   nz,RX_PO       ; 11 | 14+5+5+5+11 = 40 CYCLES
+        jp   nz,RX_PO       ; 11 | 14+5+5+5+11 = 40 CYCLES (of 62 cycles)
                             ; we are now into the stop bit window
 ;________________________________________________________________________________________________________________________________
 
@@ -237,6 +293,13 @@ ReceiveOK:
         ld   a,1
         ret
 
+ReceiveNOK:
+        ld   (hl),a
+        ld   sp,ix
+
+        ; a is already 0
+        ret
+
 ;________________________________________________________________________________________________________________________________
 
 RX_PE:
@@ -245,7 +308,43 @@ RX_PE:
         ; we use the accumulator to store the read byte
 
         in   f,(c)          ; 14
-        jp   pe,RX_PE       ; 11   LOOP=25
+        jp   po,RX_PE_START ; 11   LOOP=25
+
+        in   f,(c)          ; 14
+        jp   po,RX_PE_START ; 11   LOOP=25
+
+        in   f,(c)          ; 14
+        jp   po,RX_PE_START ; 11   LOOP=25
+
+        in   f,(c)          ; 14
+        jp   po,RX_PE_START ; 11   LOOP=25
+
+        in   f,(c)          ; 14
+        jp   po,RX_PE_START ; 11   LOOP=25
+
+        in   f,(c)          ; 14
+        jp   po,RX_PE_START ; 11   LOOP=25
+
+        in   f,(c)          ; 14
+        jp   po,RX_PE_START ; 11   LOOP=25
+
+        in   f,(c)          ; 14
+        jp   po,RX_PE_START ; 11   LOOP=25
+
+        in   f,(c)          ; 14
+        jp   po,RX_PE_START ; 11   LOOP=25
+
+        in   f,(c)          ; 14
+        jp   po,RX_PE_START ; 11   LOOP=25
+
+        dec  e              ;  5
+        jp   nz,RX_PE       ; 11
+
+        ; start bit not seen for a while
+        xor  a
+        jp   ReceiveNOK
+
+RX_PE_START:
         ld   (hl),a         ;  8 = 33 CYCLES
 
         in   a,(c)          ; 14   Bit 0
@@ -318,7 +417,8 @@ vJIOTransmit2:
         ex   de,hl          ; HL contains now buffer address
         inc  bc             ; compensate for later BC-1 test
         exx                 ; BEGIN SHADOW
-        ld   c,JIOREG       ; C contains the jiocart i/o register
+        ld   a,(jio_port)
+        ld   c,a            ; C contains the jiocart i/o register
 
         in   a,(c)          ; read the i/o register
 
@@ -485,23 +585,106 @@ set_z80_mode: ; set Z80 mode for turbo R
 cpu_mode:
         db 0
 
+jio_port_address  equ 0xFF
+
+;;
+;
+;
+jio_detect:
+        ld   hl,jio_ports
+
+;;
+; Probe for a msx-jio-cart
+; Inputs:
+;   HL = 0xff terminated array of ports to probe
+jio_probe:
+        ld   a,(hl)
+        ld   (jio_port),a
+        cp   0xff
+        ret  z
+        call jio_probe_port
+        ret  z
+        inc  hl
+        jr   jio_probe
+
+jio_probe_port:
+        ld   c,a
+        ld   a,0x2f
+        out  (c),a
+        in   a,(c)
+        and  0xfc
+        cp   0xcc
+        ret  nz
+        ld   a,0xdb
+        out  (c),a
+        in   a,(c)
+        and  0xfc
+        cp   0x88
+        ret  nz
+        ld   a,0xf7
+        out  (c),a
+        in   a,(c)
+        and  0xfc
+        cp   0x44
+        ret
+
+; List of ports that are probed, end with $ff
+jio_ports:
+        db 0x00,0x20,0x30,0xff
+jio_port:
+        db jio_port_address
+
+;;
+; Print the number in A as an hexadecimal number
+; Inputs:
+;   A = number to print
+print_hex:
+        ld   c,a
+        call @digit1
+        call CHPUT
+        ld   a, c
+        call @digit2
+        call CHPUT
+        ret
+@digit1:
+        rra
+        rra
+        rra
+        rra
+@digit2:
+        or   0xf0
+        daa
+        add  a,0xa0
+        adc  a,0x40 ; Ascii hex at this point (0 to F)   
+        ret
+
 cr_lf:
         db "\r\n\0"
 
-banner:
-        db 0x0c
-        db "JSM - JIO 38400 bauds Serial Monitor v1.0ahm\r\n"
-        db "Originally coded by Louthrax\r\n"
-        db "Modified by ahmsx for 115200 bauds\r\n"
-        db "115200 bauds routines by Nyyrikki\r\n"
-        db "Enter your commands and validate with [RETURN]\r\n"
-        db "Press [CTRL] to unlock reception\r\n"
-        db "Press [CTRL] + [C] to exit\r\n"
-        db "Useful commands:\r\n"
-        db "  Display current UART mode: AT+UART?\r\n"
-        db "  Set UART mode for JIO:     AT+UART=115200,0,0\r\n"
-        db "  Set device name:           AT+NAME=xxxxx\r\n"
-        db "-----------------------------------------\r\n\0"
+msg_welcome:
+        defb 12
+        defm "JIOC115K - JIOCART 115K bauds tool v1",13,10
+        defm "Based on JSM v1.0 tool by Louthrax",13,10
+        defm "Adapted by Albert Herranz for JIOCART",13,10
+        defm "115200 bauds routines by Nyyrikki",13,10
+        defm 13,10,0
+
+msg_usage:
+        defm "Enter your commands then hit [RETURN]",13,10
+        defm "Press [CTRL] to unlock reception",13,10
+        defm "Press [CTRL] + [C] to exit",13,10
+        defm 13,10
+        defm "Useful commands:",13,10
+        defm "  Display current UART mode: AT+UART?",13,10
+        defm "  Set UART mode for JIO:     AT+UART=115200,0,0",13,10
+        defm "  Set device name:           AT+NAME=xxx",13,10
+        defm "-------------------------------------",13,10,0
+
+msg_jiocart_found:
+        defm "JIOCART found at 0x",0
+
+msg_jiocart_not_found:
+        defm "JIOCART NOT found!",0
 
 recvbuf:
         ds 256
