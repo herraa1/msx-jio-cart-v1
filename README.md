@@ -352,7 +352,7 @@ On your MSX computer:
 
 The new configuration is automatically saved to the Bluetooth module.
 
-Once finished, power off your MSX computer and re-configure the msx-jio-cart for [Bluetooth normal operation](#selecting-bluetooth-normal-mode).
+Once finished, power off your MSX computer and re-configure the msx-jio-cart for [Bluetooth normal operation](#bluetooth-mode).
 
 ## Cartridge Operation
 
