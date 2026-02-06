@@ -379,7 +379,7 @@ In normal operation modes, make sure the _SW1_ `ROMDIS` handle is in the `left` 
 
 #### USB Serial mode
 
-To enable USB Serial mode move the _SW3_ `BLUETOOTH/SERIAL` handle to the `right` (USB Serial) position.
+To enable USB Serial mode move the _SW3_ `BLUETOOTH/SERIAL` handle to the `right` (USB Serial) position, and make sure _SW1_ is already setup for [normal operation mode](#selecting-normal-operation-modes-usb-serial-and-bluetooth).
 
 | **Switch/Jumper** | **Label**          | **State**          | **Purpose**    |
 |-------------------|--------------------|--------------------|----------------|
@@ -395,7 +395,7 @@ In USB Serial mode, the USB module RX and TX LEDs blink at the same time as the 
 
 #### Bluetooth mode
 
-To enable Bluetooth mode move the _SW3_ `BLUETOOTH/SERIAL` handle to the `left` or `middle` (Bluetooth) position.
+To enable Bluetooth mode move the _SW3_ `BLUETOOTH/SERIAL` handle to the `left` or `middle` (Bluetooth) position, and make sure _SW1_ and _JP4_ are already setup for [normal operation mode](#selecting-normal-operation-modes-usb-serial-and-bluetooth).
 
 This mode should only be used once the Bluetooth module has been configured at 115200 bauds.
 
@@ -411,7 +411,7 @@ In this mode, the bluetooth module is waiting for another unpaired device to pai
 
 [<img src="images/msx-jiocart-bluetooth-led-blinking-unpaired.gif"/>](images/msx-jiocart-bluetooth-led-blinking-unpaired.gif)
 
-##### Idnetifying connected state Bluetooth mode
+##### Identifying connected state Bluetooth mode
 
 In this mode, the bluetooth module is connected to a paired device. The LED blinks twice in a second, then goes off for two seconds, repeating this pattern continuously.
 
