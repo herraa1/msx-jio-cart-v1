@@ -7,8 +7,8 @@ It includes:
 * an I/O register to interface with the embedded serial modules
   * address of I/O register is configurable between a set of predefined options
 * one or two of these serial modules (only one active at a time):
-  * a RT232RL-based USB Serial Module
-  * a Bluetooth HC-05 Module
+  * a RT232RL-based USB serial module
+  * a Bluetooth HC-05 module
 * a switch to select the active serial module
   * optional if only one module is populated
 
@@ -48,11 +48,11 @@ See [ROM Flashing Instructions](#rom-flashing-instructions).
 
 ## [Software](https://github.com/louthrax/MSXJIO)
 
-The msx-jio-cart requires one of @louthrax [JIO Servers](https://github.com/louthrax/MSXJIO/releases).
+The msx-jio-cart requires one of @louthrax [JIO Servers](https://github.com/louthrax/MSXJIO/releases) to serve disk images to an MSX computer.
 
 The JIO Server runs on a Windows, Linux or Mac computer, or alternatively on an Android device.
 
-On the JIO server, you can select which disk image to serve and which connection method (USB Serial or Bluetooth) to use. The connection method must match your current msx-jio-cart serial module selection, according to switch _SW3_ `BLUETOOTH/SERIAL`.
+On the JIO server, you can select which disk image to serve and which connection method (USB serial or Bluetooth) to use. The connection method must match your current msx-jio-cart serial module selection, according to switch _SW3_ `BLUETOOTH/SERIAL`.
 
 
 ## [Hardware](hardware/kicad/)
@@ -66,10 +66,10 @@ The msx-jio-cart is made of a 2-layer PCB with several SMD and through-hole comp
 * 74HCT32 and 74HCT138 ICs to implement the I/O address selection logic and control interface
 * a DIP switch to configure the I/O address of the msx-jio-cart register
 * 74HCT173 and 74HCT245 to implement the I/O register
-* extra TX/RX leds to signal transmission events
+* extra TX/RX leds to signal data transmission events
 * a switch to select the active serial module
 * several jumpers to control the cartridge behavior and features
-* a header to configure the bluetooth module externally if required
+* a header to configure the Bluetooth module externally if required
 * a cartridge-wide fuse to protect the MSX slot 5V power rail in case of a cartridge malfunction
 * a Schottky diode to prevent back-powering the MSX from the serial USB module
 * other active and passive components, some of them optional
@@ -263,6 +263,8 @@ See [Setting the cartridge I/O address](#setting-the-cartridge-io-address).
 Using the JIO Server with Bluetooth requires preparing the msx-jio-cart Bluetooth module for 115200 bauds operation.
 Also, assigning a unique name to the Bluetooth module is recommended to easily locate the right msx-jio-cart.
 
+This setup is only needed when setting up the Bluetooth module for the first time.
+
 #### Selecting Bluetooth AT configuration mode at 38400 bauds
 
 In this mode, the Bluetooth module can be configured via AT commands using a fixed 38400 baud rate, irrespective of the currently configured baud rate at the module.
@@ -362,13 +364,19 @@ With the cartridge removed from the MSX and without power applied, slide only on
 
 See the [Switches and jumpers](#switches-and-jumpers) section to determine which I/O address range is enabled by each switch.
 
+> [!WARNING]
+> Make sure that the I/O address selected does not overlap any other I/O address used by other cartridges connected to the MSX computer.
+>
+> If unsure, check your other MSX cartridges documentation and/or [Grauw list of I/O ports](https://map.grauw.nl/resources/msx_io_ports.php).
+
+
 > [!NOTE]
 > Depending on which orientation was used when the DIP switch was soldered, the numbering and the `ON` position side may be different. Always use the numbering of the cartridge silkscreen to identify the `1`, `2` and `3` switches (not the numbering of the DIP switch) and always use the DIP switch `ON` position marking to determine the ON position.
 
 > [!TIP]
 > The JIO function of the MSX JIO cartridge can be disabled by setting all of the `1`, `2` and `3` switches to the `OFF` position. 
 
-### Selecting normal operation modes (USB Serial and Bluetooth)
+### Selecting normal operation modes (USB serial and Bluetooth)
 
 In normal operation modes, make sure the _SW1_ `ROMDIS` handle is in the `left` (enable) position and the _JP4_ `BTENCTL` jumper is in the `1-2` position.
 
@@ -377,9 +385,9 @@ In normal operation modes, make sure the _SW1_ `ROMDIS` handle is in the `left` 
 | _SW1_             | `ROMDIS`           | **Enable**\*       | Enable Flash ROM for normal operation                                           |
 | _JP4_             | `BTENCTL`          | **1-2**\*          | Control EN according to SW3 position                                            |
 
-#### USB Serial mode
+#### USB serial mode
 
-To enable USB Serial mode move the _SW3_ `BLUETOOTH/SERIAL` handle to the `right` (USB Serial) position, and make sure _SW1_ is already setup for [normal operation mode](#selecting-normal-operation-modes-usb-serial-and-bluetooth).
+To enable USB serial mode move the _SW3_ `BLUETOOTH/SERIAL` handle to the `right` (USB serial) position, and make sure _SW1_ is already setup for [normal operation mode](#selecting-normal-operation-modes-usb-serial-and-bluetooth).
 
 | **Switch/Jumper** | **Label**          | **State**          | **Purpose**    |
 |-------------------|--------------------|--------------------|----------------|
@@ -387,9 +395,9 @@ To enable USB Serial mode move the _SW3_ `BLUETOOTH/SERIAL` handle to the `right
 
 [<img src="images/msx-jiocart-usb-mode.png" width="512"/>](images/msx-jiocart-usb-mode.png)
 
-##### Identifying USB Serial mode
+##### Identifying USB serial mode
 
-In USB Serial mode, the USB module RX and TX LEDs blink at the same time as the cartridge RX and TX LEDs.
+In USB serial mode, the USB module RX and TX LEDs blink at the same time as the cartridge RX and TX LEDs.
 
 [<img src="images/msx-jiocart-usb-led-blinking.gif"/>](images/msx-jiocart-usb-led-blinking.gif)
 
@@ -407,16 +415,65 @@ This mode should only be used once the Bluetooth module has been configured at 1
 
 ##### Identifying non-paired/unconnected state Bluetooth mode
 
-In this mode, the bluetooth module is waiting for another unpaired device to pair, or from a previously paired device to connect. The LED blinks 5 times per second approximately.
+In this mode, the Bluetooth module is waiting for another unpaired device to pair, or from a previously paired device to connect. The LED blinks 5 times per second approximately.
 
 [<img src="images/msx-jiocart-bluetooth-led-blinking-unpaired.gif"/>](images/msx-jiocart-bluetooth-led-blinking-unpaired.gif)
 
 ##### Identifying connected state Bluetooth mode
 
-In this mode, the bluetooth module is connected to a paired device. The LED blinks twice in a second, then goes off for two seconds, repeating this pattern continuously.
+In this mode, the Bluetooth module is connected to a paired device. The LED blinks twice in a second, then goes off for two seconds, repeating this pattern continuously.
 
 [<img src="images/msx-jiocart-bluetooth-led-blinking-paired.gif"/>](images/msx-jiocart-bluetooth-led-blinking-paired.gif)
 
+
+## Cartridge Programming Interface
+
+The msx-jio-cart implements a single 8-bit I/O register in the MSX Z80 [I/O address](#setting-the-cartridge-io-address) space for Bluetooth and USB serial module data and control.
+
+### I/O Register Format
+
+Register format guidelines:
+* IN direction is from module to MSX
+* OUT direction is from MSX to module
+* LSB is bit 0, MSB is bit 7
+* Data bits are common to USB serial and Bluetooth modes
+* Control bits are specific to each module
+* Output control bits have safe defaults for normal operation
+
+#### Register format for USB serial mode
+
+| **bit** | **type** | **direction** | **description**                                                                                           |
+| ------- | -------- | ------------- | --------------------------------------------------------------------------------------------------------- |
+| 0       | data     | IN            | data received from USB serial to MSX                                                                      |
+| 1       | control  | IN            | serial data terminal ready (`DTR`)                                                                        |
+| 2       | data     | IN/OUT        | transmit data from MSX to USB serial when written, last data transmitted from MSX to USB serial when read |
+| 3       | control  | IN/OUT        | serial clear to send (`CTS`) when written, last `CTS` value written when read                             |
+| 4       | control  | IN            | always 0                                                                                                  |
+| 5       | control  | IN            | always 0                                                                                                  |
+| 6       | data     | IN            | last data transmitted from MSX to USB serial                                                              |
+| 7       | control  | IN            | last `CTS` value written                                                                                  |
+
+#### Register format for Bluetooth mode
+
+| **bit** | **type** | **direction** | **description**                                                                                                                 |
+| ------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| 0       | data     | IN            | data received from Bluetooth to MSX                                                                                             |
+| 1       | control  | IN            | `state` of Bluetooth connection, as reported by Bluetooth module (varies depending on actual HC-05 Bluetooth module)            |
+| 2       | data     | IN/OUT        | transmit data from MSX to Bluetooth when written, last data transmitted from MSX to serial when read                            |
+| 3       | control  | IN/OUT        | `EN`able value when written, last `EN`able value written when read. Set `EN`able to 1 to enter AT mode, 0 for normal data mode  |
+| 4       | control  | IN            | always 0                                                                                                                        |
+| 5       | control  | IN            | always 0                                                                                                                        |
+| 6       | data     | IN            | last data transmitted from MSX to Bluetooth                                                                                     |
+| 7       | control  | IN            | last `EN`able value written                                                                                                     |
+
+### Transmit data to module
+
+* Write a `0` to `bit 2` to assert the transmit line
+* Write a `1` to `bit 2` to deassert the transmit line
+
+### Receive data from module
+
+* Read `bit 0`: a `0` means an asserted line, a `1` a deasserted line
 
 ## Compatibility Tests
 
@@ -435,9 +492,9 @@ In this mode, the bluetooth module is connected to a paired device. The LED blin
 
 ## Errata / Known Issues
 
-* On some MSX systems, by design or due to the aging of some components, the voltage supplied to the cartridge slots is suboptimal and the bluetooth module of a msx-jio-cart with both USB and bluetooth modules installed may be slower or even randomly disconnect. The cause is likely the additional voltage drop within the cartridge due to the reverse current protection diode that protects the MSX from being back-powered from the USB serial module.
+* On some MSX systems, by design or due to the aging of some components, the voltage supplied to the cartridge slots is suboptimal and the Bluetooth module of a msx-jio-cart with both USB serial and Bluetooth modules installed may be slower or even randomly disconnect. The cause is likely the additional voltage drop within the cartridge due to the reverse current protection diode that protects the MSX from being back-powered from the USB serial module.
 
-  A workaround for this problem affecting only the bluetooth module is to connect the msx-jio-cart USB port to a 5V USB power supply or data port of a computer, as the USB connector of the USB serial module can back-power the bluetooth module (but never the MSX). By doing this, the bluetooth module and USB serial module are powered directly by 5V from the USB connection.
+  A workaround for this problem affecting only the Bluetooth module is to connect the msx-jio-cart USB port to a 5V USB power supply or data port of a computer, as the USB connector of the USB serial module can back-power the Bluetooth module (but never the MSX). By doing this, the Bluetooth module and USB serial module are powered directly by 5V from the USB connection.
 
 
 ## msx-jio-cart early prototype
