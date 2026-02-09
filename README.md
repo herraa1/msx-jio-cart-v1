@@ -299,7 +299,7 @@ The JIOC38K tool can be run from a MSX computer to send AT commands at 38400 bau
 4. Power on your MSX and proceed to the BASIC prompt
 5. Type the following instruction to load JIOC38K from tape and press `Enter`
    ~~~bash
-   RUN¨CAS:
+   RUN"CAS:
    ~~~
 6. From the computer or mobile device, play the [JIOC38K.wav](software/JIOC38K.wav) file
 7. On the MSX computer, a tape record named J38K will be found, and the JIOC38K tool will load and run
