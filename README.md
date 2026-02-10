@@ -24,10 +24,39 @@ What can I do with a msx-jio-cart?
 * After a long wait, bare prototype PCBs arrived as of Jan 8th 2026. Now, let's find some time to assemble them and (cross fingers) hope I grabbed all needed components.
 * First build1 prototype successfully assembled and tested as of Jan 11th 2026.
 * Another build1 cartridge successfully assembled and tested as of Jan 30th 2026.
+* Third build1 cartridge successfully assembled and tested as of Feb 9th 2026.
 
 > [!NOTE]
 > Documentation in progress
 
+## Quick Start Guide
+
+Build and Setup
+* Assemble the msx-jio-cart
+* [Flash the onboard ROM](#rom-flashing-instructions)
+* [Choose an I/O address](#setting-the-cartridge-io-address)
+* [Setup the Bluetooth module](#bluetooth-module-setup-instructions) (if populated)
+* [Set normal operation mode](#selecting-normal-operation-modes-usb-serial-and-bluetooth)
+
+Using USB serial mode
+* Move switch _SW3_ `BLUETOOTH/SERIAL` to the `right` position to use [USB serial mode](#usb-serial-mode)
+* Make sure the MSX computer is powered off
+* Insert the msx-jio-cart into a free slot of the MSX computer
+* Connect a USB cable from your computer to the msx-jio-cart USB port (the USB and Bluetooth modules will power up)
+* On your computer, prepare the disk image to be served and start the [JIO Server](https://github.com/louthrax/MSXJIO?tab=readme-ov-file#server-details) in USB serial mode
+* On the JIO Server, select the correct USB device and press the connect button
+* Power on the MSX computer
+* The ROM will try to boot from the disk image
+
+Using Bluetooth mode
+* Move switch _SW3_ `BLUETOOTH/SERIAL` to the `left` position to use [Bluetooth mode](#bluetooth-mode)
+* Make sure the MSX computer is powered off
+* Insert the msx-jio-cart into a free slot of the MSX computer
+* Prepare the disk image to be served and start the [JIO Server](https://github.com/louthrax/MSXJIO?tab=readme-ov-file#server-details) in Bluetooth mode
+* Power on the MSX computer
+* If not already done, pair your computer or Android device to the msx-jio-cart Bluetooth module
+* On the JIO Server, select the correct Bluetooth device and press the connect button
+* The ROM will try to boot from the disk image
 
 ## [Firmware](https://github.com/b3rendsh/msxdos2s/tree/main/jio/client)
 
@@ -294,7 +323,7 @@ The JIOC38K tool can be run from a MSX computer to send AT commands at 38400 bau
 ##### Loading JIOC38K from tape
 
 1. Make sure your MSX computer is powered off
-2. Insert the msx-jio-cart cartridge configured for AT 38400 mode into a free cartridge slot of your MSX computer
+2. Insert the msx-jio-cart cartridge [configured for AT 38400 mode](#selecting-bluetooth-at-configuration-mode-at-38400-bauds) into a free cartridge slot of your MSX computer
 3. Connect the tape interface of your MSX computer to a computer or mobile device with an audio jack output connector and able to play WAV files
 4. Power on your MSX and proceed to the BASIC prompt
 5. Type the following instruction to load JIOC38K from tape and press `Enter`
@@ -314,7 +343,7 @@ Using an auxiliar computer:
 
 Using your MSX computer:
 1. Make sure your MSX computer is powered off
-2. Insert the msx-jio-cart cartridge configured for AT 38400 mode into a free cartridge slot of your MSX computer
+2. Insert the msx-jio-cart cartridge [configured for AT 38400 mode](#selecting-bluetooth-at-configuration-mode-at-38400-bauds) into a free cartridge slot of your MSX computer
 3. Power on your MSX computer and make sure you are at the BASIC prompt
 4. With the MSX-DOS media inserted. type the following instruction to load JIOC38K from media and press `Enter`
 
