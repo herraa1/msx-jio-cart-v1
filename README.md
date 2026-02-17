@@ -461,7 +461,7 @@ The msx-jio-cart implements a single 8-bit I/O register in the MSX Z80 [I/O addr
 
 ### I/O Register Format
 
-Register format guidelines:
+Register format considerations:
 * IN direction is from module to MSX
 * OUT direction is from MSX to module
 * LSB is bit 0, MSB is bit 7
@@ -470,6 +470,8 @@ Register format guidelines:
 * Output control bits have safe defaults for normal operation
 
 #### Register format for USB serial mode
+
+This register format is available when _SW3_ `BLUETOOTH/SERIAL` is in the `right` position.
 
 | **bit** | **type** | **direction** | **description**                                                                                           |
 | ------- | -------- | ------------- | --------------------------------------------------------------------------------------------------------- |
@@ -484,12 +486,14 @@ Register format guidelines:
 
 #### Register format for Bluetooth mode
 
+This register format is available when _SW3_ `BLUETOOTH/SERIAL` is in the `middle` or `left` positions.
+
 | **bit** | **type** | **direction** | **description**                                                                                                                 |
 | ------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | 0       | data     | IN            | data received from Bluetooth to MSX                                                                                             |
 | 1       | control  | IN            | `state` of Bluetooth connection, as reported by Bluetooth module (varies depending on actual HC-05 Bluetooth module)            |
 | 2       | data     | IN/OUT        | transmit data from MSX to Bluetooth when written, last data transmitted from MSX to serial when read                            |
-| 3       | control  | IN/OUT        | `EN`able value when written, last `EN`able value written when read. Set `EN`able to 1 to enter AT mode, 0 for normal data mode  |
+| 3      | control  | IN/OUT        | `EN` (enable) value when written, last `EN` value written when read.<br>When _JP4_ `BTENCTL` is set to 1-2 and _SW3_ `BLUETOOTH/SERIAL` is in the `middle` position, you can set `EN` to 1 to enter [_partial AT_ mode](https://www.martyncurrey.com/arduino-with-hc-05-bluetooth-module-at-mode), 0 for normal data mode  |
 | 4       | control  | IN            | always 0                                                                                                                        |
 | 5       | control  | IN            | always 0                                                                                                                        |
 | 6       | data     | IN            | last data transmitted from MSX to Bluetooth                                                                                     |
@@ -506,18 +510,19 @@ Register format guidelines:
 
 ## Compatibility Tests
 
-| **Model**                                                                          | **msx-jio-cart v1 build1** |
-|------------------------------------------------------------------------------------|----------------------------|
-| [Sony MSX HB-101P](https://www.msx.org/wiki/Sony_HB-101P)                          |           OK               |
-| [Sony MSX HB-501F](https://www.msx.org/wiki/Sony_HB-501F)                          |           OK               |
-| [Toshiba MSX HX-10P](https://www.msx.org/wiki/Toshiba_HX-10P)                      |           OK               |
-| [Philips MSX2 VG-8235](https://www.msx.org/wiki/Philips_VG-8235)                   |           OK               |
-| [Panasonic MSX2+ FS-A1WSX](https://www.msx.org/wiki/Panasonic_FS-A1WSX)            |           OK               |
-| [Omega MSX2+](https://github.com/skiselev/omega)                                   |           OK               |
-| [Tides Rider](https://genami.shop/products/tides-rider-hdk)                        |           OK               |
-| [JFF-TMSHAT](https://github.com/herraa1/JFF-TMSHAT)                                |           OK               |
-| [uMSX](https://theretrohacker.com/2022/07/08/yet-another-fpga-based-msx-the-umsx/) |           OK               |
-
+| **Model**                                                                           | **msx-jio-cart v1 build1** |
+|-------------------------------------------------------------------------------------|----------------------------|
+| [Sony MSX HB-101P](https://www.msx.org/wiki/Sony_HB-101P)                           |           OK               |
+| [Sony MSX HB-501F](https://www.msx.org/wiki/Sony_HB-501F)                           |           OK               |
+| [Toshiba MSX HX-10P](https://www.msx.org/wiki/Toshiba_HX-10P)                       |           OK               |
+| [Philips MSX2 VG-8235](https://www.msx.org/wiki/Philips_VG-8235)                    |           OK               |
+| [Panasonic MSX2+ FS-A1WSX](https://www.msx.org/wiki/Panasonic_FS-A1WSX)             |           OK               |
+| [Omega MSX2+](https://github.com/skiselev/omega)                                    |           OK               |
+| [Tides Rider](https://genami.shop/products/tides-rider-hdk)                         |           OK               |
+| [JFF-TMSHAT](https://github.com/herraa1/JFF-TMSHAT)                                 |           OK               |
+| [uMSX](https://theretrohacker.com/2022/07/08/yet-another-fpga-based-msx-the-umsx/)  |           OK               |
+| [Philips NMS8255](https://www.msx.org/wiki/Philips_NMS_8255)                        |           OK               |
+| [Philips VG8010](https://www.msx.org/wiki/Philips_VG-8010) with 512KB RAM extension |           OK               |
 
 ## Errata / Known Issues
 
