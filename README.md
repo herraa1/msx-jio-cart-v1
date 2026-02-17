@@ -530,6 +530,8 @@ This register format is available when _SW3_ `BLUETOOTH/SERIAL` is in the `middl
 
   A workaround for this problem affecting only the Bluetooth module is to connect the msx-jio-cart USB port to a 5V USB power supply or data port of a computer, as the USB connector of the USB serial module can back-power the Bluetooth module (but never the MSX). By doing this, the Bluetooth module and USB serial module are powered directly by 5V from the USB connection.
 
+* The silkscreen of Build1 incorrectly shows SST39SF040 for U1. It should show SST39SF010 instead.
+
 
 ## msx-jio-cart early prototype
 
