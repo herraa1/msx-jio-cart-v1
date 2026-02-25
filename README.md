@@ -525,6 +525,7 @@ This register format is available when _SW3_ `BLUETOOTH/SERIAL` is in the `middl
 | [uMSX](https://theretrohacker.com/2022/07/08/yet-another-fpga-based-msx-the-umsx/)  |           OK               |
 | [Philips NMS8255](https://www.msx.org/wiki/Philips_NMS_8255)                        |           OK               |
 | [Philips VG8010](https://www.msx.org/wiki/Philips_VG-8010) with 512KB RAM extension |           OK               |
+| [Casio PV-7](https://www.msx.org/wiki/Casio_PV-7)                                   |           OK               |
 
 ## Errata / Known Issues
 
