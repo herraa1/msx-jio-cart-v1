@@ -494,12 +494,12 @@ This register format is available when _SW3_ `BLUETOOTH/SERIAL` is in the `middl
 | ------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | 0       | data     | IN            | data received from Bluetooth to MSX                                                                                             |
 | 1       | control  | IN            | `state` of Bluetooth connection, as reported by Bluetooth module (varies depending on actual HC-05 Bluetooth module)            |
-| 2       | data     | IN/OUT        | transmit data from MSX to Bluetooth when written, last data transmitted from MSX to serial when read                            |
+| 2       | data     | IN/OUT        | transmit data from MSX to Bluetooth when written, last data transmitted from MSX to Bluetooth when read                         |
 | 3      | control  | IN/OUT        | `EN` (enable) value when written, last `EN` value written when read.<br>When _JP4_ `BTENCTL` is set to 1-2 and _SW3_ `BLUETOOTH/SERIAL` is in the `middle` position, you can set `EN` to 1 to enter [_partial AT_ mode](https://www.martyncurrey.com/arduino-with-hc-05-bluetooth-module-at-mode), 0 for normal data mode  |
 | 4       | control  | IN            | always 0                                                                                                                        |
 | 5       | control  | IN            | always 0                                                                                                                        |
 | 6       | data     | IN            | last data transmitted from MSX to Bluetooth                                                                                     |
-| 7       | control  | IN            | last `EN`able value written                                                                                                     |
+| 7       | control  | IN            | last `EN` value written                                                                                                         |
 
 ### Transmit data to module
 
