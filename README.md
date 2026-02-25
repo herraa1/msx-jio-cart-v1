@@ -2,6 +2,8 @@
 
 This is a simple MSX cartridge that allows software-based serial communications like MSXJIO but without using joystick port 2.
 
+[<img src="images/msx-jiocart-v1-build1-with-case-small.png" width="512"/>](images/msx-jiocart-v1-build1-with-case.png)
+
 It includes:
 * a flash ROM writable by either software (in-system from MSX-DOS) or hardware (using an external programmer)
 * an I/O register to interface with the embedded serial modules
