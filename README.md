@@ -518,14 +518,16 @@ This register format is available when _SW3_ `BLUETOOTH/SERIAL` is in the `middl
 | [Sony MSX HB-501F](https://www.msx.org/wiki/Sony_HB-501F)                           |           OK               |
 | [Toshiba MSX HX-10P](https://www.msx.org/wiki/Toshiba_HX-10P)                       |           OK               |
 | [Philips MSX2 VG-8235](https://www.msx.org/wiki/Philips_VG-8235)                    |           OK               |
-| [Panasonic MSX2+ FS-A1WSX](https://www.msx.org/wiki/Panasonic_FS-A1WSX)             |           OK               |
+| [Panasonic MSX2+ FS-A1WSX](https://www.msx.org/wiki/Panasonic_FS-A1WSX) (non-turbo) |           OK               |
 | [Omega MSX2+](https://github.com/skiselev/omega)                                    |           OK               |
-| [Tides Rider](https://genami.shop/products/tides-rider-hdk)                         |           OK               |
+| [Tides Rider](https://genami.shop/products/tides-rider-hdk) (non-turbo)             |           OK               |
 | [JFF-TMSHAT](https://github.com/herraa1/JFF-TMSHAT)                                 |           OK               |
 | [uMSX](https://theretrohacker.com/2022/07/08/yet-another-fpga-based-msx-the-umsx/)  |           OK               |
 | [Philips NMS8255](https://www.msx.org/wiki/Philips_NMS_8255)                        |           OK               |
 | [Philips VG8010](https://www.msx.org/wiki/Philips_VG-8010) with 512KB RAM extension |           OK               |
 | [Casio PV-7](https://www.msx.org/wiki/Casio_PV-7)                                   |           OK               |
+| [National CF-3000](https://www.msx.org/wiki/National_CF-3000)                       |           OK               |
+| [Panasonic FS-A1ST](https://www.msx.org/wiki/Panasonic_FS-A1ST) (non-turbo)         |           OK               |
 
 ## Errata / Known Issues
 
@@ -534,6 +536,10 @@ This register format is available when _SW3_ `BLUETOOTH/SERIAL` is in the `middl
   A workaround for this problem affecting only the Bluetooth module is to connect the msx-jio-cart USB port to a 5V USB power supply or data port of a computer, as the USB connector of the USB serial module can back-power the Bluetooth module (but never the MSX). By doing this, the Bluetooth module and USB serial module are powered directly by 5V from the USB connection.
 
 * The silkscreen of Build1 incorrectly shows SST39SF040 for U1. It should show SST39SF010 instead.
+
+* The current JIO client ROMs are designed for the standard MSX Z80 clock frequency of ~3.579545 MHz, so they won't work when enabling so called "turbo" modes (which change the CPU frequency) on capable MSX machines.
+
+* The [MSX-PICO](https://msxpico.com/) cartridge by default adds wait cycles that may break the strict timing required by the Z80 code used to serialize data at 115200 bauds.
 
 
 ## msx-jio-cart early prototype
