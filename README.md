@@ -547,6 +547,19 @@ This register format is available when _SW3_ `BLUETOOTH/SERIAL` is in the `middl
 [<img src="images/msx-jiocart-early-prototype-board_512x.png" width="512"/>](images/msx-jiocart-early-prototype-board.png)
 
 
+## Acrylic Enclosure
+
+This acrylic enclosure is designed for the msx-jio-cart with bluetooth and usb serial modules and a large mechanical switch for selecting the serial interface.
+
+The enclosure is based on the nice [acrylic enclosures by Capsule5000](https://github.com/capsule5000/CARTRIDGE_METHACRYLATE_MSX-EEPROM-Cartridge-64k).
+
+### [Enclosure](enclosure/)
+
+|[<img src="images/msx-jio-cart-enclosure-front.png" width="384"/>](images/msx-jio-cart-enclosure-front.png)|[<img src="images/msx-jio-cart-enclosure-back.png" width="384"/>](images/msx-jio-cart-enclosure-back.png)|
+|-|-|
+|front|back|
+
+
 ## References
 
 NYYRIKKI's 115200 bps routines
@@ -563,3 +576,7 @@ Skoti's Spider Flash Cart
 
 Danjovic Soda-IDE
 * https://github.com/Danjovic/Soda-IDE
+
+Capsule5000 acrylic enclosures
+* https://github.com/capsule5000?tab=repositories
+
